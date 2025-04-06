@@ -1,16 +1,86 @@
-import { BrowserRouter, Routes, Route } from 'react-router';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ROUTES } from '../config/routes';
+
+import LoginPage from '../pages/AuthPage/LoginPage';
+import RegisterPage from '../pages/AuthPage/RegisterPage';
 import HomePage from '../pages/HomePage/HomePage';
 
+import PrivateRoute from './PrivateRoute';
+import PublicRoute from './PublicRoute';
 
 const AppRouter = () => (
-    <BrowserRouter>
-        <Routes>
-            <Route path={ROUTES.home} element={<HomePage />} />
+  <BrowserRouter>
+    <Routes>
+      {/* Rotas públicas apenas se não autenticado */}
+      <Route
+        path={ROUTES.login}
+        element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+      />
 
-            {/* Rotas protegidas */}
-        </Routes>
-    </BrowserRouter>
+      <Route
+        path={ROUTES.register}
+        element={
+          <PublicRoute>
+            <RegisterPage />
+          </PublicRoute>
+        }
+      />
+
+      {/* Rotas protegidas */}
+      <Route
+        path={ROUTES.home}
+        element={
+          <PrivateRoute>
+            <HomePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={ROUTES.dashboard}
+        element={
+          <PrivateRoute>
+            <HomePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={ROUTES.pacientes}
+        element={
+          <PrivateRoute>
+            <HomePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={ROUTES.evolucoes}
+        element={
+          <PrivateRoute>
+            <HomePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={ROUTES.exercicios}
+        element={
+          <PrivateRoute>
+            <HomePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={ROUTES.agendan}
+        element={
+          <PrivateRoute>
+            <HomePage />
+          </PrivateRoute>
+        }
+      />
+    </Routes>
+  </BrowserRouter>
 );
 
 export default AppRouter;

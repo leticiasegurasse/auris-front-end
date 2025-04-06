@@ -21,7 +21,7 @@ function MainLayout ({ children }) {
             <div className="flex">
                 <NavbarComponent/>
                 <div className="w-full">
-                    <div className="w-full flex items-center justify-end gap-3 p-2 bg-white">
+                    <div className="w-full h-[70px] flex items-center justify-end gap-3 p-2 bg-white">
                         {/* <Bell/> */}
                         <div className="relative">
                             {/* Perfil do Usuário */}
@@ -59,7 +59,7 @@ function MainLayout ({ children }) {
                         </div>
                     </div>
 
-                    <div className="w-full min-h-screen z-10 p-4 flex flex-col items-center justify-center">
+                    <div className="w-full min-h-[calc(100vh-70px)] z-10 p-4 flex flex-col items-center justify-center">
                         {children}
                     </div>
                 </div>

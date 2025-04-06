@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import IconLogo from "../../assets/icons/icon.png"
 import LogoFull from "../../assets/logos/logo.png"
+import { ROUTES } from "../../config/routes";
 // import { useAuth } from "../../context/AuthContext";
 import {
   Menu,
@@ -32,7 +33,7 @@ function NavbarComponent() {
   }
 
   return (
-    <div className={`${isCollapsed ? "md:w-20" : "md:w-[290px]"} transition-all`}>
+    <div className={`${isCollapsed ? "md:w-20" : "md:w-[400px] lg:w-[340px]"} transition-all`}>
       {/* Botão para abrir menu no mobile */}
       <button
         onClick={toggleSidebar}
@@ -87,12 +88,12 @@ function NavbarComponent() {
         <nav className="w-10/12 py-7 space-y-4 border-t border-gray-100">
           <ul className="space-y-4">
             {[
-              { name: "Home", icon: Home, path: "/" },
-              { name: "Dashboard", icon: LayoutDashboard, path: "/dash" },
-              { name: "Pacientes", icon: UserRound, path: "/pacientes" },
-              { name: "Evoluções", icon: Activity, path: "/pacientes" },
-              { name: "Exercícios", icon: ClipboardPlus, path: "/exercicios" },
-              { name: "Agenda", icon: CalendarCheck, path: "/agenda" },
+              { name: "Home", icon: Home, path: ROUTES.home },
+              { name: "Dashboard", icon: LayoutDashboard, path: ROUTES.dashboard },
+              { name: "Pacientes", icon: UserRound, path: ROUTES.pacientes },
+              { name: "Evoluções", icon: Activity, path: ROUTES.evolucoes },
+              { name: "Exercícios", icon: ClipboardPlus, path: ROUTES.exercicios },
+              { name: "Agenda", icon: CalendarCheck, path: ROUTES.agenda },
             ].map((item) => (
               <li
                 key={item.name}
