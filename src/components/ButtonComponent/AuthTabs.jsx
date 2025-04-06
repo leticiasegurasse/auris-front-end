@@ -17,7 +17,7 @@ export default function AuthTabs() {
           ${
             isLogin
               ? "px-4 text-[var(--secondary-color)] border-b-2"
-              : "cursor-pointer px-6 rounded-full border-2 border-[var(--secondary-color)] text-[var(--secondary-color)] hover:bg-[var(--secondary-color)] hover:text-white"
+              : "cursor-pointer px-6 rounded-full text-[var(--secondary-color)] hover:bg-[var(--secondary-color)] hover:text-white"
           }`}
       >
         Login
@@ -30,7 +30,7 @@ export default function AuthTabs() {
           ${
             isRegister
               ? "px-4 text-[var(--secondary-color)] border-b-2"
-              : "cursor-pointer px-6 rounded-full border-2 border-[var(--secondary-color)] text-[var(--secondary-color)] hover:bg-[var(--secondary-color)] hover:text-white"
+              : "cursor-pointer px-6 rounded-full text-[var(--secondary-color)] hover:bg-[var(--secondary-color)] hover:text-white"
           }`}
       >
         Registrar

@@ -5,6 +5,9 @@ import LoginPage from '../pages/AuthPage/LoginPage';
 import RegisterPage from '../pages/AuthPage/RegisterPage';
 import HomePage from '../pages/HomePage/HomePage';
 
+import PatientsPage from '../pages/PatientPage/PatientsPage';
+import NewPatientsPage from '../pages/PatientPage/NewPatientPage';
+
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 
@@ -48,11 +51,19 @@ const AppRouter = () => (
         }
       />
       <Route
-        path={ROUTES.pacientes}
+        path={ROUTES.patients}
         element={
-          <PrivateRoute>
-            <HomePage />
-          </PrivateRoute>
+        //   <PrivateRoute>
+            <PatientsPage />
+        //   </PrivateRoute>
+        }
+      />
+      <Route
+        path={ROUTES.newpatient}
+        element={
+        //   <PrivateRoute>
+            <NewPatientsPage />
+        //   </PrivateRoute>
         }
       />
       <Route

@@ -8,13 +8,15 @@ import {
  } 
 from "lucide-react"; // exemplo, caso ainda não tenha importado
 import NavbarComponent from "../components/NavbarComponent/NavbarComponent";
-import { userMock } from "../mocks/userMock";
 import { useCustomNavigate } from "../hooks/useCustomNavigate";
+import { useAuth } from "../hooks/useAuth";
 
 
 function MainLayout ({ children }) {  
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const { goTo } = useCustomNavigate();
+    const { user, logout } = useAuth();
+
 
     return (
         <>
@@ -31,12 +33,11 @@ function MainLayout ({ children }) {
                             >
                                 {/* Avatar com a inicial do usuário */}
                                 <div className="w-9 h-9 flex items-center justify-center bg-[var(--primary-color)] text-[var(--light-blue)] text-xl font-bold rounded-3xl shrink-0">
-                                    {userMock?.name?.charAt(0)}
+                                    {user?.name_user?.charAt(0)|| "A"}
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <p className="text-gray-800 font-medium">{userMock?.name || "Usuário"}</p>
+                                    <p className="text-gray-800 font-medium">{user?.name_user || "Usuário"}</p>
                                     {isDropdownOpen ? <ChevronUp /> : <ChevronDown />}
-
                                 </div>  
                             </div>
 
@@ -50,7 +51,10 @@ function MainLayout ({ children }) {
                                         <User className="w-5 h-5 text-gray-600" />
                                         Meu perfil
                                     </button>
-                                    <button className="flex items-center gap-3 w-full p-2 text-gray-800 hover:bg-gray-100 rounded-md transition cursor-pointer">
+                                    <button 
+                                        className="flex items-center gap-3 w-full p-2 text-gray-800 hover:bg-gray-100 rounded-md transition cursor-pointer"
+                                        onClick={() => logout()}
+                                    >
                                         <LogOut className="w-5 h-5 text-gray-600" />
                                         Sair
                                     </button>
