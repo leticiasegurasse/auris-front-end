@@ -53,17 +53,17 @@ const AppRouter = () => (
       <Route
         path={ROUTES.patients}
         element={
-        //   <PrivateRoute>
+          <PrivateRoute>
             <PatientsPage />
-        //   </PrivateRoute>
+          </PrivateRoute>
         }
       />
       <Route
         path={ROUTES.newpatient}
         element={
-        //   <PrivateRoute>
+          <PrivateRoute>
             <NewPatientsPage />
-        //   </PrivateRoute>
+          </PrivateRoute>
         }
       />
       <Route

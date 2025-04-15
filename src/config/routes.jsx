@@ -5,7 +5,7 @@ export const ROUTES = {
     dashboard: '/dashboard',
     patients: '/patients',
     newpatient: '/newpatient',
-    evolucoes: '/evolucoes',
-    exercicios: '/exercicios',
-    agenda: '/agenda',
+    evolution: '/evolution',
+    exercise: '/exercise',
+    calendar: '/calendar',
 };

@@ -19,7 +19,7 @@ import {
 
 function NavbarComponent() {
   const [isOpen, setIsOpen] = useState(false); // Menu aberto por padrão
-  const [isCollapsed, setIsCollapsed] = useState(true); // Para recolher em telas grandes
+  const [isCollapsed, setIsCollapsed] = useState(false); // Para recolher em telas grandes
 
   const location = useLocation(); // Obtém a URL atual
 //   const { user, signOut } = useAuth();
@@ -91,9 +91,9 @@ function NavbarComponent() {
               { name: "Home", icon: Home, path: ROUTES.home },
               { name: "Dashboard", icon: LayoutDashboard, path: ROUTES.dashboard },
               { name: "Pacientes", icon: UserRound, path: ROUTES.patients },
-              { name: "Evoluções", icon: Activity, path: ROUTES.evolucoes },
-              { name: "Exercícios", icon: ClipboardPlus, path: ROUTES.exercicios },
-              { name: "Agenda", icon: CalendarCheck, path: ROUTES.agenda },
+              { name: "Evoluções", icon: Activity, path: ROUTES.evolution },
+              { name: "Exercícios", icon: ClipboardPlus, path: ROUTES.exercise },
+              { name: "Agenda", icon: CalendarCheck, path: ROUTES.calendar },
             ].map((item) => (
               <li
                 key={item.name}

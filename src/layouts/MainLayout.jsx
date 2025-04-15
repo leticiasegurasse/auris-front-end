@@ -23,7 +23,7 @@ function MainLayout ({ children }) {
             <div className="flex">
                 <NavbarComponent/>
                 <div className="w-full">
-                    <div className="w-full h-[70px] flex items-center justify-end gap-3 p-2 bg-white">
+                    <div className="w-full h-[70px] flex items-center md:justify-end gap-3 p-2 bg-white">
                         {/* <Bell/> */}
                         <div className="relative">
                             {/* Perfil do Usuário */}

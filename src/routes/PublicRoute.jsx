@@ -3,7 +3,9 @@ import { useAuth } from '../hooks/useAuth';
 import { ROUTES } from '../config/routes';
 
 const PublicRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) return <div className="text-center mt-10">Carregando...</div>;
 
   return isAuthenticated ? <Navigate to={ROUTES.home} /> : children;
 };

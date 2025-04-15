@@ -54,9 +54,9 @@ function RegisterPage() {
   return (
     <SubLayout>
       <div className="w-full flex justify-evenly">
-        <div>
+        {/* <div>
           <h1>Bem vindo!</h1>
-        </div>
+        </div> */}
         <form
           onSubmit={handleSubmit}
           className="w-full max-w-sm space-y-6"
