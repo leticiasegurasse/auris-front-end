@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true); // NOVO: controla se o contexto terminou de carregar
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -13,6 +14,7 @@ export const AuthProvider = ({ children }) => {
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
     }
+    setLoading(false); // terminou de verificar o armazenamento local
   }, []);
 
   const login = ({ token, user }) => {
@@ -29,8 +31,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated: !!token }}>
-      {children}
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        isAuthenticated: !!token,
+        loading, // NOVO: disponibiliza para as rotas
+      }}
+    >
+      {!loading && children} {/* só renderiza se já carregou do localStorage */}
     </AuthContext.Provider>
   );
 };

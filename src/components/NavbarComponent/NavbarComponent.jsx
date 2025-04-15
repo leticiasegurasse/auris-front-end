@@ -19,7 +19,7 @@ import {
 
 function NavbarComponent() {
   const [isOpen, setIsOpen] = useState(false); // Menu aberto por padrão
-  const [isCollapsed, setIsCollapsed] = useState(true); // Para recolher em telas grandes
+  const [isCollapsed, setIsCollapsed] = useState(false); // Para recolher em telas grandes
 
   const location = useLocation(); // Obtém a URL atual
 //   const { user, signOut } = useAuth();

@@ -19,17 +19,24 @@ function LoginPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
+  
     if (validateForm()) {
       try {
         const res = await loginRequest(values.email, values.password);
-        login(res.data);
+  
+        if (res.data.user?.role !== "therapist") {
+          alert("Apenas fonoaudiólogos podem acessar o sistema.");
+          return;
+        }
+  
+        login(res.data); // só loga se for "therapist"
         goTo("dashboard");
       } catch (err) {
-        alert("Falha no login:", err);
+        alert("Falha no login. Verifique suas credenciais.");
+        console.error(err);
       }
     }
-  }
+  }  
 
   return (
     <SubLayout>

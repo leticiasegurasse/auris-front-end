@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import { getAllPatients } from "../../api/patients/patient";
+import Button from "../../components/ButtonComponent/ButtonComponent";
 
 function PatientsPage() {
   const [patients, setPatients] = useState([]);
@@ -22,15 +23,14 @@ function PatientsPage() {
 
   return (
     <MainLayout>
-        <div className="w-full">
+        <div className="w-full min-h-[calc(100vh-150px)]">
             <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-semibold text-gray-800">Lista de Pacientes</h1>
-                <button
-                    className="bg-[var(--primary-color)] text-white px-4 py-2 rounded-lg shadow hover:bg-opacity-90"
-                    onClick={() => goTo("newpatient")}
+                <Button
+                  onClick={() => goTo("newpatient")}
                 >
                     Novo Paciente
-                </button>
+                </Button>
             </div>
 
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
