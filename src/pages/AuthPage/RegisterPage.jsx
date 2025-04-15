@@ -144,7 +144,7 @@ function RegisterPage() {
           <Button
             type="submit"
             size="full"
-            variant="cta"
+            variant="secondary"
             className="!rounded-full"
           >
             Cadastrar
