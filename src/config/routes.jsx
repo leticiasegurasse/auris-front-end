@@ -4,6 +4,7 @@ export const ROUTES = {
     register: '/register',
     dashboard: '/dashboard',
     patients: '/patients',
+    patient: '/patients/:id',
     newpatient: '/newpatient',
     evolution: '/evolution',
     exercise: '/exercise',
