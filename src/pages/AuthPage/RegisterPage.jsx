@@ -9,22 +9,38 @@ import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 
 function RegisterPage() {
   const { values, errors, handleChange, validateForm } = useForm(
-    { name_user: "", email: "", password: "", confirmPassword: "", crfa: "" },
     {
-      name_user: (value) => value,
+      name_user: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      crfa: "",
+    },
+    {
+      name_user: (value) =>
+        !value ? "Nome é obrigatório" : "",
       email: (value) =>
         !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? "Email inválido" : "",
-
+      password: (value) =>
+        value.length < 6 ? "Senha deve ter pelo menos 6 caracteres" : "",
+      confirmPassword: (value) =>
+        value.length < 6 ? "Confirmação de senha inválida" : "",
+      crfa: (value) =>
+        !value ? "CRFa é obrigatório" : "",
     }
   );
+  
 
   const { login } = useAuth();
   const { goTo } = useCustomNavigate();
 
   async function handleSubmit(e) {
+    console.log("entrou aqui")
     e.preventDefault();
-
+    
     if (validateForm()) {
+      console.log("form valido")
+      
       if (values.password !== values.confirmPassword) {
         alert("As senhas não coincidem.");
         return;
@@ -48,6 +64,8 @@ function RegisterPage() {
         console.error("Erro no cadastro ou login:", error.response?.data || error.message);
         alert("Erro ao cadastrar ou logar usuário: " + (error.response?.data?.message || "verifique os dados."));
       }
+    } else {
+      alert("formulario invalido")
     }
   }
 
