@@ -6,7 +6,10 @@ import RegisterPage from '../pages/AuthPage/RegisterPage';
 import HomePage from '../pages/HomePage/HomePage';
 
 import PatientsPage from '../pages/PatientPage/PatientsPage';
+import PatientDetailsPage from '../pages/PatientPage/PatientDetailsPage';
 import NewPatientsPage from '../pages/PatientPage/NewPatientPage';
+
+import ExerciseCategoryPage from '../pages/ExerciseCategoryPage/ExerciseCategoryPage';
 
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -59,6 +62,14 @@ const AppRouter = () => (
         }
       />
       <Route
+        path={ROUTES.patient}
+        element={
+          <PrivateRoute>
+            <PatientDetailsPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
         path={ROUTES.newpatient}
         element={
           <PrivateRoute>
@@ -67,7 +78,7 @@ const AppRouter = () => (
         }
       />
       <Route
-        path={ROUTES.evolucoes}
+        path={ROUTES.evolution}
         element={
           <PrivateRoute>
             <HomePage />
@@ -75,10 +86,10 @@ const AppRouter = () => (
         }
       />
       <Route
-        path={ROUTES.exercicios}
+        path={ROUTES.exercise}
         element={
           <PrivateRoute>
-            <HomePage />
+            <ExerciseCategoryPage />
           </PrivateRoute>
         }
       />
