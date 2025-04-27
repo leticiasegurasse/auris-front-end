@@ -57,11 +57,20 @@ const AppRouter = () => (
         }
       />
       {/* ROTA PACIENTES */}
+      {/* ROTA PACIENTES */}
       <Route
         path={ROUTES.patients}
         element={
           <PrivateRoute>
             <PatientsPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={ROUTES.patient}
+        element={
+          <PrivateRoute>
+            <PatientDetailsPage />
           </PrivateRoute>
         }
       />
@@ -81,6 +90,7 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
+      {/* ROTA EVOLUÇÃO */}
       {/* ROTA EVOLUÇÃO */}
       <Route
         path={ROUTES.evolution}
