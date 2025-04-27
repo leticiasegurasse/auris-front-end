@@ -27,7 +27,7 @@ function PatientsPage() {
             <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-semibold text-gray-800">Lista de Pacientes</h1>
                 <Button
-                  onClick={() => goTo("newpatient")}
+                  onClick={() => goTo("NEW_PATIENT")}
                 >
                     Novo Paciente
                 </Button>
@@ -48,7 +48,7 @@ function PatientsPage() {
                       {patients.map((patient, index) => (
                         <tr
                           key={index}
-                          onClick={() => goTo("patient", { id: patient._id })}
+                          onClick={() => goTo("PATIENT", { id: patient._id })}
                           className="cursor-pointer hover:bg-gray-100 transition-colors"
                         >
                           <td className="px-4 py-2">{patient.userId?.name_user || 'Sem nome'}</td>

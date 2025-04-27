@@ -13,3 +13,8 @@ export async function createExercise(formData) {
   });
   return response.data;
 }
+
+export async function getExerciseById(id) {
+  const response = await api.get(`/exercises/${id}`);
+  return response.data;
+}

@@ -88,12 +88,12 @@ function NavbarComponent() {
         <nav className="w-10/12 py-7 space-y-4 border-t border-gray-100">
           <ul className="space-y-4">
             {[
-              { name: "Home", icon: Home, path: ROUTES.home },
-              { name: "Dashboard", icon: LayoutDashboard, path: ROUTES.dashboard },
-              { name: "Pacientes", icon: UserRound, path: ROUTES.patients },
-              { name: "Evoluções", icon: Activity, path: ROUTES.evolution },
-              { name: "Exercícios", icon: ClipboardPlus, path: ROUTES.exercises },
-              { name: "Agenda", icon: CalendarCheck, path: ROUTES.calendar },
+              { name: "Home", icon: Home, path: ROUTES.HOME },
+              { name: "Dashboard", icon: LayoutDashboard, path: ROUTES.DASHBOARD },
+              { name: "Pacientes", icon: UserRound, path: ROUTES.PATIENTS },
+              { name: "Evoluções", icon: Activity, path: ROUTES.EVOLUTION },
+              { name: "Exercícios", icon: ClipboardPlus, path: ROUTES.CATEGORIES },
+              { name: "Agenda", icon: CalendarCheck, path: ROUTES.CALENDAR },
             ].map((item) => (
               <li
                 key={item.name}

@@ -59,7 +59,7 @@ function RegisterPage() {
         // login automático após cadastro
         const response = await loginRequest(values.email, values.password);
         login(response.data);
-        goTo("home");
+        goTo("HOME");
       } catch (error) {
         console.error("Erro no cadastro ou login:", error.response?.data || error.message);
         alert("Erro ao cadastrar ou logar usuário: " + (error.response?.data?.message || "verifique os dados."));

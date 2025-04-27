@@ -1,20 +1,22 @@
 export const ROUTES = {
-    login: '/login',
-    register: '/register',
+    LOGIN: '/login',
+    REGISTER: '/register',
 
-    home: '/',
-    dashboard: '/dashboard',
+    HOME: '/',
+    DASHBOARD: '/dashboard',
 
-    patients: '/patients',
-    patient: '/patients/:id',
-    newpatient: '/newpatient',
+    PATIENTS: '/patients',
+    PATIENT: '/patients/:id',
+    NEW_PATIENT: '/new_patient',
 
-    evolution: '/evolution',
+    EVOLUTION: '/evolution',
 
-    exercises: '/exercises',
-    exercises_by_category: '/exercises/category/:categoryId',
-    create_category: '/categories/create',
-    exercise_create: '/exercises/create/:categoryId',
+    CATEGORIES: '/categories',
+    NEW_CATEGORY: '/new_categorie',
+    
+    EXERCISES_BY_CATEGORY: '/exercises/category/:categoryId',
+    NEW_EXERCISE: '/exercises/new_exercise/:categoryId',
+    EXERCISE_DETAILS: '/exercise/:exerciseId',
 
-    calendar: '/calendar',
+    CALENDAR: '/calendar',
 };

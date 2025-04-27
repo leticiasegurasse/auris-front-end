@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import MainLayout from "../../layouts/MainLayout";
-import { getCategoryById } from "../../api/exercise_categories/exercise_categories";
+import { getCategoryById } from "../../api/categories/categories";
 import { getExercisesByCategory } from "../../api/exercises/exercise";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import Button from "../../components/ButtonComponent/ButtonComponent";
@@ -35,7 +35,11 @@ function ExercisesByCategoryPage() {
   }, [categoryId]);
 
   const handleAddExercise = () => {
-    goTo("exercise_create", { categoryId }); // 👈 usando seu goTo passando params
+    goTo("NEW_EXERCISE", { categoryId });
+  };
+
+  const handleViewExerciseDetails = (exerciseId) => {
+    goTo("EXERCISE_DETAILS", { exerciseId });
   };
 
   if (loading) {
@@ -73,7 +77,8 @@ function ExercisesByCategoryPage() {
             {exercises.map((exercise) => (
               <div
                 key={exercise._id}
-                className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition"
+                className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition cursor-pointer"
+                onClick={() => handleViewExerciseDetails(exercise._id)}
               >
                 <h3 className="text-lg font-semibold mb-2">{exercise.title}</h3>
                 <p className="text-gray-600">{exercise.description}</p>

@@ -7,7 +7,7 @@ import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import { useAuth } from "../../hooks/useAuth";
 import { registerPatientRequest } from "../../api/patients/patient";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
-import { ArrowBigLeftDash } from "lucide-react";
+import BackButton from "../../components/ButtonComponent/BackButton";
 
 function NewPatientsPage() {
   const [alert, setAlert] = useState(null);
@@ -29,7 +29,7 @@ function NewPatientsPage() {
   );
 
   const { user } = useAuth();
-  const { goToWithDelay, goBack } = useCustomNavigate();
+  const { goToWithDelay } = useCustomNavigate();
 
 
   async function handleSubmit(e) {
@@ -43,7 +43,7 @@ function NewPatientsPage() {
         };
         await registerPatientRequest(payload);
         setAlert({ type: "success", message: "Paciente cadastrado com sucesso!" });
-        goToWithDelay("patients", 1500)
+        goToWithDelay("PTIENTS", 1500)
       } catch (err) {
         setAlert({ type: "error", message: "Erro ao cadastrar paciente" });
         console.error(err);
@@ -60,15 +60,7 @@ function NewPatientsPage() {
         <AlertMessage type={alert.type} message={alert.message} className="mb-4" onClose={() => setAlert(null)} />
       )}
 
-      <div className="w-full">
-        <Button 
-          variant="transparent" 
-          icon={ArrowBigLeftDash}
-          onClick={goBack}
-        >
-          Voltar
-        </Button>
-      </div>
+      <BackButton/> 
       <div className="w-full max-w-xl mx-auto p-4">
         <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-2xl shadow-xl">
           <div>

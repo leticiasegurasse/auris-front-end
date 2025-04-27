@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
 import Button from "../../components/ButtonComponent/ButtonComponent";
-import { useNavigate } from "react-router-dom";
-import { getAllCategories } from "../../api/exercise_categories/exercise_categories";
+import { getAllCategories } from "../../api/categories/categories";
+import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 
-function ExerciseCategoryPage() {
+function CategoriesPage() {
   const [categories, setCategories] = useState([]);
-  const navigate = useNavigate();
+
+  const { goTo } = useCustomNavigate();
 
   useEffect(() => {
     async function fetchCategories() {
@@ -22,11 +23,11 @@ function ExerciseCategoryPage() {
   }, []);
 
   const handleCategoryClick = (categoryId) => {
-    navigate(`/exercises/category/${categoryId}`);
+    goTo("EXERCISES_BY_CATEGORY", {categoryId});
   };
 
   const handleCreateCategory = () => {
-    navigate("/categories/create");
+    goTo("NEW_CATEGORY");
   };
 
   return (
@@ -52,4 +53,4 @@ function ExerciseCategoryPage() {
   );
 }
 
-export default ExerciseCategoryPage;
+export default CategoriesPage;

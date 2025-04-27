@@ -1,13 +1,13 @@
 import { useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
-import Button from "../../components/ButtonComponent/ButtonComponent";
-import { createCategory } from "../../api/exercise_categories/exercise_categories";
+import { createCategory } from "../../api/categories/categories";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
-import { ArrowBigLeftDash } from "lucide-react";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
+import BackButton from "../../components/ButtonComponent/BackButton";
+import Button from "../../components/ButtonComponent/ButtonComponent";
 
 function CreateCategoryPage() {
-    const { goBack, goToWithDelay } = useCustomNavigate();
+    const { goToWithDelay } = useCustomNavigate();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [alert, setAlert] = useState(null);
@@ -18,7 +18,7 @@ function CreateCategoryPage() {
         try {
             await createCategory({ title, description });
             setAlert({ type: "success", message: "Ctegoria cadastrada com sucesso!" });
-            goToWithDelay("exercise", 1500)
+            goToWithDelay("CATEGORIES", 1500)
         } catch (error) {
             setAlert({ type: "error", message: "Erro ao cadastrar categoria:", error });
         }
@@ -30,15 +30,7 @@ function CreateCategoryPage() {
                 <AlertMessage type={alert.type} message={alert.message} className="mb-4" onClose={() => setAlert(null)} />
             )}
 
-            <div className="w-full">
-                <Button 
-                variant="transparent" 
-                icon={ArrowBigLeftDash}
-                onClick={goBack}
-                >
-                Voltar
-                </Button>
-            </div>
+            <BackButton/>
             <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded shadow-md">
                 <h1 className="text-3xl font-bold mb-6">Criar Nova Categoria</h1>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">

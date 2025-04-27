@@ -30,7 +30,7 @@ function LoginPage() {
         }
   
         login(res.data); // só loga se for "therapist"
-        goTo("dashboard");
+        goTo("HOME");
       } catch (err) {
         alert("Falha no login. Verifique suas credenciais.");
         console.error(err);

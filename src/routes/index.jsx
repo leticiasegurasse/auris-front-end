@@ -9,10 +9,12 @@ import PatientsPage from '../pages/PatientPage/PatientsPage';
 import PatientDetailsPage from '../pages/PatientPage/PatientDetailsPage';
 import NewPatientsPage from '../pages/PatientPage/NewPatientPage';
 
-import ExerciseCategoryPage from '../pages/ExerciseCategoryPage/ExerciseCategoryPage';
+import CategoriesPage from '../pages/ExerciseCategoryPage/CategoriesPage';
 import CreateCategoryPage from '../pages/ExerciseCategoryPage/CreateCategoryPage';
+
 import ExercisesByCategoryPage from '../pages/ExercisePage/ExercisesByCategoryPage';
 import CreateExercisePage from '../pages/ExercisePage/CreateExercisePage';
+import ExerciseDetailsPage from '../pages/ExercisePage/ExerciseDetailsPage';
 
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -22,7 +24,7 @@ const AppRouter = () => (
     <Routes>
       {/* Rotas públicas apenas se não autenticado */}
       <Route
-        path={ROUTES.login}
+        path={ROUTES.LOGIN}
         element={
           <PublicRoute>
             <LoginPage />
@@ -31,7 +33,7 @@ const AppRouter = () => (
       />
 
       <Route
-        path={ROUTES.register}
+        path={ROUTES.REGISTER}
         element={
           <PublicRoute>
             <RegisterPage />
@@ -41,7 +43,7 @@ const AppRouter = () => (
 
       {/* Rotas protegidas */}
       <Route
-        path={ROUTES.home}
+        path={ROUTES.HOME}
         element={
           <PrivateRoute>
             <HomePage />
@@ -49,7 +51,7 @@ const AppRouter = () => (
         }
       />
       <Route
-        path={ROUTES.dashboard}
+        path={ROUTES.DASHBOARD}
         element={
           <PrivateRoute>
             <HomePage />
@@ -58,7 +60,7 @@ const AppRouter = () => (
       />
       {/* ROTA PACIENTES */}
       <Route
-        path={ROUTES.patients}
+        path={ROUTES.PATIENTS}
         element={
           <PrivateRoute>
             <PatientsPage />
@@ -66,7 +68,7 @@ const AppRouter = () => (
         }
       />
       <Route
-        path={ROUTES.patient}
+        path={ROUTES.PATIENT}
         element={
           <PrivateRoute>
             <PatientDetailsPage />
@@ -74,7 +76,7 @@ const AppRouter = () => (
         }
       />
       <Route
-        path={ROUTES.newpatient}
+        path={ROUTES.NEW_PATIENT}
         element={
           <PrivateRoute>
             <NewPatientsPage />
@@ -83,32 +85,33 @@ const AppRouter = () => (
       />
       {/* ROTA EVOLUÇÃO */}
       <Route
-        path={ROUTES.evolution}
+        path={ROUTES.EVOLUTION}
         element={
           <PrivateRoute>
             <HomePage />
           </PrivateRoute>
         }
       />
-      {/* ROTA EXERCICIOS */}
+      {/* ROTA CATEGORIAS */}
       <Route
-        path={ROUTES.exercises}
+        path={ROUTES.CATEGORIES}
         element={
           <PrivateRoute>
-            <ExerciseCategoryPage />
+            <CategoriesPage />
           </PrivateRoute>
         }
       />
       <Route
-        path={ROUTES.create_category}
+        path={ROUTES.NEW_CATEGORY}
         element={
           <PrivateRoute>
             <CreateCategoryPage />
           </PrivateRoute>
         }
       />
+      {/* ROTA EXERCICIOS */}
       <Route
-        path={ROUTES.exercises_by_category}
+        path={ROUTES.EXERCISES_BY_CATEGORY}
         element={
           <PrivateRoute>
             <ExercisesByCategoryPage />
@@ -116,16 +119,24 @@ const AppRouter = () => (
         }
       />
       <Route
-        path={ROUTES.exercise_create}
+        path={ROUTES.NEW_EXERCISE}
         element={
           <PrivateRoute>
             <CreateExercisePage />
           </PrivateRoute>
         }
       />
-
       <Route
-        path={ROUTES.agendan}
+        path={ROUTES.EXERCISE_DETAILS}
+        element={
+          <PrivateRoute>
+            <ExerciseDetailsPage />
+          </PrivateRoute>
+        }
+      />
+      {/* ROTA AGENDA */}
+      <Route
+        path={ROUTES.CALENDAR}
         element={
           <PrivateRoute>
             <HomePage />
