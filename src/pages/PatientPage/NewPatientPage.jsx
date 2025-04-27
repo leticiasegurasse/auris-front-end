@@ -29,7 +29,7 @@ function NewPatientsPage() {
   );
 
   const { user } = useAuth();
-  const { goTo, goBack } = useCustomNavigate();
+  const { goToWithDelay, goBack } = useCustomNavigate();
 
 
   async function handleSubmit(e) {
@@ -43,7 +43,7 @@ function NewPatientsPage() {
         };
         await registerPatientRequest(payload);
         setAlert({ type: "success", message: "Paciente cadastrado com sucesso!" });
-        setTimeout(() => goTo("patients"), 1500); // redireciona após 1.5s
+        goToWithDelay("patients", 1500)
       } catch (err) {
         setAlert({ type: "error", message: "Erro ao cadastrar paciente" });
         console.error(err);

@@ -92,7 +92,7 @@ function NavbarComponent() {
               { name: "Dashboard", icon: LayoutDashboard, path: ROUTES.dashboard },
               { name: "Pacientes", icon: UserRound, path: ROUTES.patients },
               { name: "Evoluções", icon: Activity, path: ROUTES.evolution },
-              { name: "Exercícios", icon: ClipboardPlus, path: ROUTES.exercise },
+              { name: "Exercícios", icon: ClipboardPlus, path: ROUTES.exercises },
               { name: "Agenda", icon: CalendarCheck, path: ROUTES.calendar },
             ].map((item) => (
               <li
