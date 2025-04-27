@@ -23,7 +23,7 @@ function PatientsPage() {
 
   return (
     <MainLayout>
-        <div className="w-full min-h-[calc(100vh-150px)]">
+        <div className="w-full">
             <div className="flex items-center justify-between mb-4">
                 <h1 className="text-2xl font-semibold text-gray-800">Lista de Pacientes</h1>
                 <Button
@@ -45,16 +45,23 @@ function PatientsPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {patients.map((patient, index) => (
-                            <tr key={index}>
-                                <td className="px-4 py-2">{patient.userId?.name_user || 'Sem nome'}</td>
-                                <td className="px-4 py-2">{patient.userId?.email || 'Sem email'}</td>
-                                <td className="px-4 py-2">{new Date(patient.birthDate).toLocaleDateString()}</td>
-                                <td className="px-4 py-2">{patient.diagnosis}</td>
-                                <td className="px-4 py-2 capitalize">{patient.status}</td>
-                            </tr>
-                        ))}
+                      {patients.map((patient, index) => (
+                        <tr
+                          key={index}
+                          onClick={() => goTo("patient", { id: patient._id })}
+                          className="cursor-pointer hover:bg-gray-100 transition-colors"
+                        >
+                          <td className="px-4 py-2">{patient.userId?.name_user || 'Sem nome'}</td>
+                          <td className="px-4 py-2">{patient.userId?.email || 'Sem email'}</td>
+                          <td className="px-4 py-2">
+                            {new Date(patient.birthDate).toLocaleDateString()}
+                          </td>
+                          <td className="px-4 py-2">{patient.diagnosis}</td>
+                          <td className="px-4 py-2 capitalize">{patient.status}</td>
+                        </tr>
+                      ))}
                     </tbody>
+
                 </table>
             </div>
         </div>
