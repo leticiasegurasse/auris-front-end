@@ -9,10 +9,6 @@ import PatientsPage from '../pages/PatientPage/PatientsPage';
 import PatientDetailsPage from '../pages/PatientPage/PatientDetailsPage';
 import NewPatientsPage from '../pages/PatientPage/NewPatientPage';
 
-import ExerciseCategoryPage from '../pages/ExerciseCategoryPage/ExerciseCategoryPage';
-import CreateCategoryPage from '../pages/ExerciseCategoryPage/CreateCategoryPage';
-import ExercisesByCategoryPage from '../pages/ExercisePage/ExercisesByCategoryPage';
-
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 
@@ -89,32 +85,14 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
-      {/* ROTA EXERCICIOS */}
       <Route
-        path={ROUTES.exercise}
+        path={ROUTES.exercicios}
         element={
           <PrivateRoute>
-            <ExerciseCategoryPage />
+            <HomePage />
           </PrivateRoute>
         }
       />
-      <Route
-        path={ROUTES.create_category}
-        element={
-          <PrivateRoute>
-            <CreateCategoryPage />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path={ROUTES.exercises_by_category}
-        element={
-          <PrivateRoute>
-            <ExercisesByCategoryPage />
-          </PrivateRoute>
-        }
-      />
-
       <Route
         path={ROUTES.agendan}
         element={
