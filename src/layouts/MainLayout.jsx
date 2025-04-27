@@ -63,7 +63,7 @@ function MainLayout ({ children }) {
                         </div>
                     </div>
 
-                    <div className="w-full min-h-[calc(100vh-70px)] z-10 p-4 flex flex-col items-center justify-center">
+                    <div className="w-full min-h-[calc(100vh-70px)] z-10 p-10">
                         {children}
                     </div>
                 </div>
