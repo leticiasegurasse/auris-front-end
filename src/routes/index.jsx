@@ -6,7 +6,12 @@ import RegisterPage from '../pages/AuthPage/RegisterPage';
 import HomePage from '../pages/HomePage/HomePage';
 
 import PatientsPage from '../pages/PatientPage/PatientsPage';
+import PatientDetailsPage from '../pages/PatientPage/PatientDetailsPage';
 import NewPatientsPage from '../pages/PatientPage/NewPatientPage';
+
+import ExerciseCategoryPage from '../pages/ExerciseCategoryPage/ExerciseCategoryPage';
+import CreateCategoryPage from '../pages/ExerciseCategoryPage/CreateCategoryPage';
+import ExercisesByCategoryPage from '../pages/ExercisePage/ExercisesByCategoryPage';
 
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -50,11 +55,20 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
+      {/* ROTA PACIENTES */}
       <Route
         path={ROUTES.patients}
         element={
           <PrivateRoute>
             <PatientsPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={ROUTES.patient}
+        element={
+          <PrivateRoute>
+            <PatientDetailsPage />
           </PrivateRoute>
         }
       />
@@ -66,22 +80,41 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
+      {/* ROTA EVOLUÇÃO */}
       <Route
-        path={ROUTES.evolucoes}
+        path={ROUTES.evolution}
         element={
           <PrivateRoute>
             <HomePage />
           </PrivateRoute>
         }
       />
+      {/* ROTA EXERCICIOS */}
       <Route
-        path={ROUTES.exercicios}
+        path={ROUTES.exercise}
         element={
           <PrivateRoute>
-            <HomePage />
+            <ExerciseCategoryPage />
           </PrivateRoute>
         }
       />
+      <Route
+        path={ROUTES.create_category}
+        element={
+          <PrivateRoute>
+            <CreateCategoryPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={ROUTES.exercises_by_category}
+        element={
+          <PrivateRoute>
+            <ExercisesByCategoryPage />
+          </PrivateRoute>
+        }
+      />
+
       <Route
         path={ROUTES.agendan}
         element={
