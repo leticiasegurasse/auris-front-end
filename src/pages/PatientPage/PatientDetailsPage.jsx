@@ -4,9 +4,10 @@ import MainLayout from "../../layouts/MainLayout";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import { ArrowBigLeftDash } from "lucide-react";
-import { getPatientById, updatePatientById } from "../../api/patients/patient";
+import { getPatientById, updatePatientById, getPatientExercisesByPatientId, createPatientExercise } from "../../api/patients/patient";
 import { updateUserById } from "../../api/users/user";
-import { getPatientExercisesByPatientId } from "../../api/patients/patient"; // vamos criar esse serviço já já
+import { getAllCategories } from "../../api/categories/categories";
+import { getExercisesByCategory } from "../../api/exercises/exercise";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
 
 function PatientDetailsPage() {
@@ -18,6 +19,16 @@ function PatientDetailsPage() {
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("details"); // 👈 controla o menu (details ou exercises)
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState('');
+  const [availableExercises, setAvailableExercises] = useState([]);
+  const [selectedExerciseId, setSelectedExerciseId] = useState('');
+  const [newStartDate, setNewStartDate] = useState('');
+  const [newEndDate, setNewEndDate] = useState('');
+
+
 
   const [formData, setFormData] = useState({
     name_user: "",
@@ -42,6 +53,7 @@ function PatientDetailsPage() {
 
         const exercisesData = await getPatientExercisesByPatientId(id);
         setExercises(exercisesData);
+        console.log(exercisesData);
       } catch (error) {
         console.error("Erro ao buscar paciente ou exercícios:", error);
       } finally {
@@ -80,9 +92,67 @@ function PatientDetailsPage() {
 
       setAlert({ type: "success", message: "Dados alterados com sucesso!" });
     } catch (error) {
-      setAlert({ type: "error", message: "Erro ao atualizar paciente." });
+      setAlert({ type: "error", message: `Erro ao atualizar paciente: ${error}` });
     }
   };
+
+  async function handleOpenModal() {
+    try {
+      const response = await getAllCategories();
+      setCategories(response);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("Erro ao buscar categorias:", error);
+    }
+  }
+  
+
+  async function handleCategoryChange(categoryId) {
+    try {
+      setSelectedCategoryId(categoryId);
+      if (!categoryId) {
+        setAvailableExercises([]);
+        return;
+      }
+      const response = await getExercisesByCategory(categoryId);
+      setAvailableExercises(response);
+    } catch (error) {
+      console.error("Erro ao buscar exercícios da categoria:", error);
+    }
+  }
+  
+  async function handleSaveNewExercise() {
+    try {
+      if (!selectedExerciseId || !newStartDate || !newEndDate) {
+        setAlert({ type: "warning", message: "Preencha todos os campos!" });
+        return;
+      }
+  
+      await createPatientExercise({
+        patientId: id,
+        exerciseId: selectedExerciseId,
+        startDate: newStartDate,
+        endDate: newEndDate,
+      });
+  
+      setIsModalOpen(false);
+      setSelectedCategoryId('');
+      setSelectedExerciseId('');
+      setNewStartDate('');
+      setNewEndDate('');
+  
+      // Atualizar a lista de exercícios do paciente
+      const updatedExercises = await getPatientExercisesByPatientId(id);
+      setExercises(updatedExercises);
+  
+      setAlert({ type: "success", message: "Exercício atribuído com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao atribuir exercício:", error);
+      setAlert({ type: "error", message: "Erro ao atribuir exercício." });
+    }
+  }
+ 
+  
 
   return (
     <MainLayout>
@@ -157,8 +227,84 @@ function PatientDetailsPage() {
               ))}
             </div>
           )}
+          <Button onClick={handleOpenModal} variant="primary">
+            + Atribuir Novo Exercício
+          </Button>
+
         </div>
       )}
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative">
+            <h2 className="text-2xl font-bold mb-4">Atribuir Novo Exercício</h2>
+
+            {/* Selecionar Categoria */}
+            <div className="mb-4">
+              <label className="block font-medium mb-1">Categoria</label>
+              <select
+                value={selectedCategoryId}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg p-2"
+              >
+                <option value="">Selecione uma categoria</option>
+                {categories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {category.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Selecionar Exercício */}
+            <div className="mb-4">
+              <label className="block font-medium mb-1">Exercício</label>
+              <select
+                value={selectedExerciseId}
+                onChange={(e) => setSelectedExerciseId(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg p-2"
+                disabled={!selectedCategoryId}
+              >
+                <option value="">Selecione um exercício</option>
+                {availableExercises.map((exercise) => (
+                  <option key={exercise._id} value={exercise._id}>
+                    {exercise.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Datas */}
+            <div className="mb-4">
+              <label className="block font-medium mb-1">Data de Início</label>
+              <input
+                type="date"
+                value={newStartDate}
+                onChange={(e) => setNewStartDate(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg p-2"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block font-medium mb-1">Data de Término</label>
+              <input
+                type="date"
+                value={newEndDate}
+                onChange={(e) => setNewEndDate(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg p-2"
+              />
+            </div>
+
+            {/* Botões */}
+            <div className="flex justify-end gap-4">
+              <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+              <Button onClick={handleSaveNewExercise}>Salvar</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
     </MainLayout>
   );
 }

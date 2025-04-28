@@ -23,3 +23,8 @@ export async function getPatientExercisesByPatientId(patientId) {
   const response = await api.get(`/patient-exercises/patient/${patientId}`);
   return response.data;
 }
+
+export async function createPatientExercise(data) {
+  const response = await api.post('/patient-exercises', data);
+  return response.data;
+}

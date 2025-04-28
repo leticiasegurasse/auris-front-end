@@ -18,3 +18,8 @@ export async function getExerciseById(id) {
   const response = await api.get(`/exercises/${id}`);
   return response.data;
 }
+
+export async function getAllExercises() {
+  const response = await api.get('/exercises'); // certifique que seu backend tem esse endpoint
+  return response.data;
+}
