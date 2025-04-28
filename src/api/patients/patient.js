@@ -17,3 +17,9 @@ export const updatePatientById = async (id, updatedData) => {
   const response = await api.put(`/patients/${id}`, updatedData);
   return response.data;
 };
+
+// PATIENT EXERCISE
+export async function getPatientExercisesByPatientId(patientId) {
+  const response = await api.get(`/patient-exercises/patient/${patientId}`);
+  return response.data;
+}
