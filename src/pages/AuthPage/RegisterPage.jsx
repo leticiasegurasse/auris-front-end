@@ -71,15 +71,15 @@ function RegisterPage() {
 
   return (
     <SubLayout>
-      <div className="w-full flex justify-evenly">
+      <div className="w-full flex flex-col items-center justify-center gap-4">
         {/* <div>
           <h1>Bem vindo!</h1>
         </div> */}
+        <AuthTabs />
         <form
           onSubmit={handleSubmit}
           className="w-full max-w-sm space-y-6"
         >
-          <AuthTabs />
 
           <div>
             <label className="block text-[var(--secondary-color)] mb-1">Nome completo:</label>

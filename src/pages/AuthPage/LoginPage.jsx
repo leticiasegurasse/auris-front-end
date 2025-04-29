@@ -29,7 +29,7 @@ function LoginPage() {
           return;
         }
   
-        login(res.data); // só loga se for "therapist"
+        login(res.data);
         goTo("HOME");
       } catch (err) {
         alert("Falha no login. Verifique suas credenciais.");

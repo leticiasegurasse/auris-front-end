@@ -7,7 +7,7 @@ const PublicRoute = ({ children }) => {
 
   if (loading) return <div className="text-center mt-10">Carregando...</div>;
 
-  return isAuthenticated ? <Navigate to={ROUTES.home} /> : children;
+  return isAuthenticated ? <Navigate to={ROUTES.HOME} /> : children;
 };
 
 export default PublicRoute;

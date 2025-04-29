@@ -28,3 +28,8 @@ export async function createPatientExercise(data) {
   const response = await api.post('/patient-exercises', data);
   return response.data;
 }
+
+export async function deletePatientExercise(exerciseId) {
+  const response = await api.delete(`/patient-exercises/${exerciseId}`);
+  return response.data;
+}

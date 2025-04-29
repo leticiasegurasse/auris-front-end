@@ -1,20 +1,42 @@
 import { createContext, useState, useEffect } from 'react';
+import { verifyToken } from '../api/auth';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true); // NOVO: controla se o contexto terminou de carregar
+  const [loading, setLoading] = useState(true);
+
+  const logout = () => {
+    localStorage.clear();
+    setToken(null);
+    setUser(null);
+  };
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('token');
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
-    }
-    setLoading(false); // terminou de verificar o armazenamento local
+    const checkAuth = async () => {
+      const storedUser = localStorage.getItem('user');
+      const storedToken = localStorage.getItem('token');
+
+      if (storedUser && storedToken) {
+        try {
+          // Verifica se o token é válido
+          await verifyToken();
+          
+          // Se chegou aqui, o token é válido
+          setUser(JSON.parse(storedUser));
+          setToken(storedToken);
+        } catch (error) {
+          // Se o token for inválido, desloga o usuário
+          console.error('Token inválido:', error);
+          logout();
+        }
+      }
+      setLoading(false);
+    };
+
+    checkAuth();
   }, []);
 
   const login = ({ token, user }) => {
@@ -22,12 +44,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(user));
     setToken(token);
     setUser(user);
-  };
-
-  const logout = () => {
-    localStorage.clear();
-    setToken(null);
-    setUser(null);
   };
 
   return (
@@ -38,10 +54,10 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         isAuthenticated: !!token,
-        loading, // NOVO: disponibiliza para as rotas
+        loading,
       }}
     >
-      {!loading && children} {/* só renderiza se já carregou do localStorage */}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

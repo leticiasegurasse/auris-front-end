@@ -12,7 +12,7 @@ export default function AuthTabs() {
     <div className="w-full flex justify-center items-center gap-4">
       {/* Botão Login */}
       <button
-        onClick={() => goTo("login")}
+        onClick={() => goTo("LOGIN")}
         className={`py-2 font-bold transition
           ${
             isLogin
@@ -25,7 +25,7 @@ export default function AuthTabs() {
 
       {/* Botão Registrar */}
       <button
-        onClick={() => goTo("register")}
+        onClick={() => goTo("REGISTER")}
         className={`py-2 font-bold transition
           ${
             isRegister
