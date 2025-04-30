@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MainLayout from "../../layouts/MainLayout";
 import { getExerciseById, deleteExerciseById, updateExerciseById } from "../../api/exercises/exercise";
 import BackButton from "../../components/ButtonComponent/BackButton";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
 import { Trash2, Pencil } from "lucide-react";
+import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 
 function ExerciseDetailsPage() {
   const { exerciseId } = useParams();
-  const navigate = useNavigate();
+  const { goBack } = useCustomNavigate();
   const [exercise, setExercise] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -47,9 +48,7 @@ function ExerciseDetailsPage() {
       await deleteExerciseById(exerciseId);
       setAlert({ type: "success", message: "Exercício excluído com sucesso!" });
       setIsDeleteModalOpen(false);
-      setTimeout(() => {
-        navigate(-1);
-      }, 1000);
+      goBack();
     } catch (error) {
       console.error("Erro ao excluir exercício:", error);
       setAlert({ type: "error", message: "Erro ao excluir exercício: " + error });

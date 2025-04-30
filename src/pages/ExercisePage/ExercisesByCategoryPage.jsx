@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MainLayout from "../../layouts/MainLayout";
 import { getCategoryById, updateCategoryById, deleteCategoryById } from "../../api/categories/categories";
 import { getExercisesByCategory } from "../../api/exercises/exercise";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Edit2 } from "lucide-react";
 
 function ExercisesByCategoryPage() {
   const { categoryId } = useParams();
   const { goTo } = useCustomNavigate();
-  const navigate = useNavigate();
 
   const [category, setCategory] = useState(null);
   const [exercises, setExercises] = useState([]);
@@ -96,12 +95,24 @@ function ExercisesByCategoryPage() {
       setIsEditModalOpen(false);
       // Redireciona para a página de categorias após 1 segundo
       setTimeout(() => {
-        navigate("/categories");
+        goTo("CATEGORIES");
       }, 1000);
     } catch (error) {
       console.error("Erro ao excluir categoria:", error);
       setAlert({ type: "error", message: "Erro ao excluir categoria: " + error });
     }
+  };
+
+  const handleEdit = (exerciseId) => {
+    goTo("EXERCISE_DETAILS", { exerciseId });
+  };
+
+  const handleCreate = () => {
+    goTo("NEW_EXERCISE", { categoryId });
+  };
+
+  const handleBack = () => {
+    goTo("CATEGORIES");
   };
 
   if (loading) {
