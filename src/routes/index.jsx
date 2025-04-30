@@ -16,6 +16,8 @@ import ExercisesByCategoryPage from '../pages/ExercisePage/ExercisesByCategoryPa
 import CreateExercisePage from '../pages/ExercisePage/CreateExercisePage';
 import ExerciseDetailsPage from '../pages/ExercisePage/ExerciseDetailsPage';
 
+import CalendarPage from '../pages/CalendarPage/CalendarPage';
+
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 
@@ -139,7 +141,7 @@ const AppRouter = () => (
         path={ROUTES.CALENDAR}
         element={
           <PrivateRoute>
-            <HomePage />
+            <CalendarPage />
           </PrivateRoute>
         }
       />
