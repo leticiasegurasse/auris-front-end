@@ -14,9 +14,12 @@ import {
 import { getAllPatients } from "../../api/patients/patient";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
+import ConsultationAlerts from "../../components/AlertsComponent/ConsultationAlerts";
 import { Plus, Trash2, Search } from "lucide-react";
+import { useAuth } from "../../hooks/useAuth";
 
 function CalendarPage() {
+  const { user } = useAuth();
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -27,7 +30,8 @@ function CalendarPage() {
   const [formData, setFormData] = useState({
     patient: "",
     consultationDateTime: "",
-    observations: ""
+    observations: "",
+    therapist: user?.id || ""
   });
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -53,16 +57,29 @@ function CalendarPage() {
   const loadAppointments = async () => {
     try {
       const appointments = await getAppointments();
-      const formattedEvents = appointments.map(appointment => ({
-        id: appointment._id,
-        title: `Consulta - ${appointment.patient.name}`,
-        start: new Date(appointment.consultationDateTime),
-        end: new Date(new Date(appointment.consultationDateTime).getTime() + 60 * 60 * 1000), // 1 hora de duração
-        color: "#3B82F6",
-        extendedProps: {
-          ...appointment
-        }
-      }));
+      console.log("Appointments raw:", appointments);
+      const formattedEvents = appointments.map(appointment => {
+        const startDate = new Date(appointment.consultationDateTime);
+        const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+
+        const formatDateTime = (date) => {
+          return date.toISOString();
+        };
+        
+        return {
+          id: appointment._id,
+          title: `${appointment.patient?.userId.name_user || 'Paciente'}`,
+          start: formatDateTime(startDate),
+          end: formatDateTime(endDate),
+          color: "#3B82F6",
+          allDay: false,
+          extendedProps: {
+            patient: appointment.patient,
+            observations: appointment.observations
+          }
+        };
+      });
+      console.log("Formatted Events:", formattedEvents);
       setEvents(formattedEvents);
     } catch (error) {
       console.error("Erro ao carregar consultas:", error);
@@ -71,22 +88,31 @@ function CalendarPage() {
   };
 
   const handleDateClick = (arg) => {
-    setSelectedDate(arg.date);
+    console.log("Date click arg:", arg);
+    const clickedDate = new Date(arg.date);
+    if (arg.view.type === 'dayGridMonth') {
+      clickedDate.setHours(8, 0, 0);
+    }
+    
+    setSelectedDate(clickedDate);
     setSelectedAppointment(null);
     setFormData({
       patient: "",
-      consultationDateTime: arg.date.toISOString(),
-      observations: ""
+      consultationDateTime: clickedDate.toISOString().slice(0, -8),
+      observations: "",
+      therapist: user?.id || ""
     });
     setIsModalOpen(true);
   };
 
   const handleEventClick = (arg) => {
+    const startDate = new Date(arg.event.start);
     setSelectedAppointment(arg.event.extendedProps);
     setFormData({
       patient: arg.event.extendedProps.patient._id,
-      consultationDateTime: new Date(arg.event.start).toISOString(),
-      observations: arg.event.extendedProps.observations || ""
+      consultationDateTime: startDate.toISOString().slice(0, -8),
+      observations: arg.event.extendedProps.observations || "",
+      therapist: user?.id || ""
     });
     setIsModalOpen(true);
   };
@@ -106,7 +132,14 @@ function CalendarPage() {
         await updateAppointment(selectedAppointment._id, formData);
         setAlert({ type: "success", message: "Consulta atualizada com sucesso!" });
       } else {
-        await createAppointment(formData);
+        const appointmentDateTime = new Date(formData.consultationDateTime);
+        const appointmentData = {
+          ...formData,
+          consultationDateTime: appointmentDateTime.toISOString(),
+          therapist: user?.id
+        };
+        console.log("Dados do agendamento:", appointmentData);
+        await createAppointment(appointmentData);
         setAlert({ type: "success", message: "Consulta agendada com sucesso!" });
       }
       setIsModalOpen(false);
@@ -133,7 +166,7 @@ function CalendarPage() {
 
   return (
     <MainLayout>
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-[1600px] mx-auto p-6">
         {alert && (
           <AlertMessage 
             type={alert.type} 
@@ -152,7 +185,8 @@ function CalendarPage() {
               setFormData({
                 patient: "",
                 consultationDateTime: "",
-                observations: ""
+                observations: "",
+                therapist: user?.id || ""
               });
               setIsModalOpen(true);
             }}
@@ -161,34 +195,53 @@ function CalendarPage() {
           </Button>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-4">
-          <FullCalendar
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            initialView="dayGridMonth"
-            headerToolbar={{
-              left: "prev,next today",
-              center: "title",
-              right: "dayGridMonth,timeGridWeek"
-            }}
-            locale={ptBrLocale}
-            height="auto"
-            dateClick={handleDateClick}
-            eventClick={handleEventClick}
-            events={events}
-            eventTimeFormat={{
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false
-            }}
-            slotMinTime="08:00:00"
-            slotMaxTime="20:00:00"
-            allDaySlot={false}
-            weekends={true}
-            editable={true}
-            selectable={true}
-            selectMirror={true}
-            dayMaxEvents={true}
-          />
+        <div className="flex gap-6">
+          <div className="flex-1">
+            <div className="bg-white rounded-lg shadow p-4">
+              <FullCalendar
+                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                initialView="dayGridMonth"
+                headerToolbar={{
+                  left: "prev,next today",
+                  center: "title",
+                  right: "dayGridMonth,timeGridWeek,timeGridDay"
+                }}
+                locale={ptBrLocale}
+                height="auto"
+                dateClick={handleDateClick}
+                eventClick={handleEventClick}
+                events={events}
+                eventTimeFormat={{
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false
+                }}
+                slotMinTime="08:00:00"
+                slotMaxTime="20:00:00"
+                allDaySlot={false}
+                weekends={true}
+                editable={true}
+                selectable={true}
+                selectMirror={true}
+                dayMaxEvents={true}
+                slotDuration="00:30:00"
+                slotLabelInterval="01:00"
+                slotLabelFormat={{
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false
+                }}
+                displayEventTime={true}
+                displayEventEnd={true}
+                eventDisplay="block"
+                timeZone="local"
+              />
+            </div>
+          </div>
+
+          <div className="w-80">
+            <ConsultationAlerts events={events} />
+          </div>
         </div>
 
         {/* Modal de Agendamento */}

@@ -1,6 +1,7 @@
 import api from "../axiosInstance";
 
 export async function createAppointment(appointmentData) {
+  console.log(appointmentData);
   const response = await api.post("/agenda", appointmentData);
   return response.data;
 }
