@@ -14,3 +14,13 @@ export async function getCategoryById(id) {
   const response = await api.get(`/categories/${id}`);
   return response.data;
 }
+
+export async function updateCategoryById(id, updatedData) {
+  const response = await api.put(`/categories/${id}`, updatedData);
+  return response.data;
+}
+
+export async function deleteCategoryById(id) {
+  const response = await api.delete(`/categories/${id}`);
+  return response.data;
+}
