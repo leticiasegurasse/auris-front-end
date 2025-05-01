@@ -4,7 +4,7 @@ import MainLayout from "../../layouts/MainLayout";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import { ArrowBigLeftDash, Trash2 } from "lucide-react";
-import { getPatientById, updatePatientById, getPatientExercisesByPatientId, createPatientExercise, deletePatientExercise } from "../../api/patients/patient";
+import { getPatientById, updatePatientById, getPatientExercisesByPatientId, createPatientExercise, deletePatientExercise, createPatientDocument, getPatientDocuments, updatePatientDocument } from "../../api/patients/patient";
 import { updateUserById } from "../../api/users/user";
 import { getAllCategories } from "../../api/categories/categories";
 import { getExercisesByCategory } from "../../api/exercises/exercise";
@@ -18,7 +18,7 @@ function PatientDetailsPage() {
   const [patient, setPatient] = useState(null);
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("details"); // 👈 controla o menu (details ou exercises)
+  const [activeTab, setActiveTab] = useState("details"); // 👈 controla o menu (details, exercises ou documents)
   const [exerciseTab, setExerciseTab] = useState("pending"); // 👈 controla a aba dos exercícios
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,8 +30,14 @@ function PatientDetailsPage() {
   const [selectedExerciseId, setSelectedExerciseId] = useState('');
   const [newStartDate, setNewStartDate] = useState('');
   const [newEndDate, setNewEndDate] = useState('');
-
-
+  const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
+  const [documents, setDocuments] = useState([]);
+  const [documentTab, setDocumentTab] = useState("anamnese"); // 👈 controla a aba dos documentos
+  const [newDocument, setNewDocument] = useState({
+    report: '',
+    observation: '',
+    type: 'anamnese' // 👈 tipo padrão do documento
+  });
 
   const [formData, setFormData] = useState({
     name_user: "",
@@ -56,9 +62,11 @@ function PatientDetailsPage() {
 
         const exercisesData = await getPatientExercisesByPatientId(id);
         setExercises(exercisesData);
-        console.log(exercisesData);
+
+        const documentsData = await getPatientDocuments(id);
+        setDocuments(documentsData);
       } catch (error) {
-        console.error("Erro ao buscar paciente ou exercícios:", error);
+        console.error("Erro ao buscar dados:", error);
       } finally {
         setLoading(false);
       }
@@ -177,6 +185,45 @@ function PatientDetailsPage() {
     setIsDeleteModalOpen(true);
   };
 
+  const handleSaveNewDocument = async () => {
+    try {
+      if (!newDocument.report || !newDocument.observation) {
+        setAlert({ type: "warning", message: "Preencha todos os campos!" });
+        return;
+      }
+
+      console.log('Dados a serem enviados:', {
+        patientId: id,
+        type: newDocument.type,
+        report: newDocument.report,
+        observation: newDocument.observation
+      });
+
+      await createPatientDocument({
+        patientId: id,
+        type: newDocument.type,
+        report: newDocument.report,
+        observation: newDocument.observation
+      });
+
+      // Atualizar lista de documentos
+      const updatedDocuments = await getPatientDocuments(id);
+      setDocuments(updatedDocuments);
+
+      setIsDocumentModalOpen(false);
+      setNewDocument({
+        report: '',
+        observation: '',
+        type: 'anamnese'
+      });
+
+      setAlert({ type: "success", message: "Documento adicionado com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao adicionar documento:", error);
+      setAlert({ type: "error", message: `Erro ao adicionar documento: ${error.response?.data?.message || error.message}` });
+    }
+  };
+
   return (
     <MainLayout>
       {alert && (
@@ -196,6 +243,9 @@ function PatientDetailsPage() {
         </Button>
         <Button variant={activeTab === "exercises" ? "primary" : "outline"} onClick={() => setActiveTab("exercises")}>
           Exercícios
+        </Button>
+        <Button variant={activeTab === "documents" ? "primary" : "outline"} onClick={() => setActiveTab("documents")}>
+          Documentos
         </Button>
       </div>
 
@@ -229,7 +279,7 @@ function PatientDetailsPage() {
             Salvar Alterações
           </Button>
         </div>
-      ) : (
+      ) : activeTab === "exercises" ? (
         <div className="space-y-4 bg-white shadow-md p-6 rounded-xl">
           <h2 className="text-2xl font-bold text-gray-700 mb-4">Exercícios do Paciente</h2>
           
@@ -301,6 +351,54 @@ function PatientDetailsPage() {
           <Button onClick={handleOpenModal} variant="primary">
             + Atribuir Novo Exercício
           </Button>
+        </div>
+      ) : (
+        <div className="space-y-4 bg-white shadow-md p-6 rounded-xl">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-700">Documentos do Paciente</h2>
+            <Button onClick={() => setIsDocumentModalOpen(true)} variant="primary">
+              + Adicionar Novo Documento
+            </Button>
+          </div>
+
+          {/* Abas dos documentos */}
+          <div className="flex gap-4 mb-6">
+            <Button 
+              variant={documentTab === "anamnese" ? "primary" : "outline"} 
+              onClick={() => setDocumentTab("anamnese")}
+            >
+              Anamnese
+            </Button>
+            <Button 
+              variant={documentTab === "evolucao" ? "primary" : "outline"} 
+              onClick={() => setDocumentTab("evolucao")}
+            >
+              Evolução
+            </Button>
+          </div>
+          
+          {documents.length === 0 ? (
+            <p className="text-gray-500">Nenhum documento encontrado para este paciente.</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4">
+              {documents
+                .filter(document => document.type === documentTab)
+                .map((document) => (
+                <div key={document._id} className="bg-gray-100 rounded-lg p-4 shadow hover:shadow-md transition">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">Relatório</h3>
+                      <p className="text-gray-600">{document.report}</p>
+                      <p className="text-gray-500 text-sm mt-2">Observação: {document.observation}</p>
+                      <p className="text-gray-500 text-sm mt-2">
+                        Data: {new Date(document.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -397,6 +495,52 @@ function PatientDetailsPage() {
               >
                 Confirmar Exclusão
               </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Adicionar Documento */}
+      {isDocumentModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative">
+            <h2 className="text-2xl font-bold mb-4">Adicionar Novo Documento</h2>
+
+            <div className="mb-4">
+              <label className="block font-medium mb-1">Tipo de Documento</label>
+              <select
+                value={newDocument.type}
+                onChange={(e) => setNewDocument(prev => ({ ...prev, type: e.target.value }))}
+                className="w-full border border-gray-300 rounded-lg p-2"
+              >
+                <option value="anamnese">Anamnese</option>
+                <option value="evolucao">Evolução</option>
+              </select>
+            </div>
+
+            <div className="mb-4">
+              <label className="block font-medium mb-1">Relatório</label>
+              <textarea
+                value={newDocument.report}
+                onChange={(e) => setNewDocument(prev => ({ ...prev, report: e.target.value }))}
+                className="w-full border border-gray-300 rounded-lg p-2 h-32"
+                placeholder="Digite o relatório..."
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block font-medium mb-1">Observação</label>
+              <textarea
+                value={newDocument.observation}
+                onChange={(e) => setNewDocument(prev => ({ ...prev, observation: e.target.value }))}
+                className="w-full border border-gray-300 rounded-lg p-2 h-32"
+                placeholder="Digite a observação..."
+              />
+            </div>
+
+            <div className="flex justify-end gap-4">
+              <Button variant="outline" onClick={() => setIsDocumentModalOpen(false)}>Cancelar</Button>
+              <Button onClick={handleSaveNewDocument}>Salvar</Button>
             </div>
           </div>
         </div>
