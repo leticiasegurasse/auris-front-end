@@ -10,7 +10,6 @@ from "lucide-react"; // exemplo, caso ainda não tenha importado
 import NavbarComponent from "../components/NavbarComponent/NavbarComponent";
 import { useCustomNavigate } from "../hooks/useCustomNavigate";
 import { useAuth } from "../hooks/useAuth";
-import BackButton from "../components/ButtonComponent/BackButton";
 
 
 function MainLayout ({ children }) {  
@@ -25,7 +24,6 @@ function MainLayout ({ children }) {
                 <NavbarComponent/>
                 <div className="w-full">
                     <div className="w-full h-[60px] flex items-center md:justify-end gap-3 p-7 bg-white">
-                        <BackButton/>
                         {/* <Bell/> */}
                         <div className="relative">
                             {/* Perfil do Usuário */}
@@ -65,7 +63,7 @@ function MainLayout ({ children }) {
                         </div>
                     </div>
 
-                    <div className="w-full min-h-[calc(100vh-70px)] z-10 py-8 px-10">
+                    <div className="w-full min-h-[calc(100vh-60px)] z-10 py-8 px-10">
                         {children}
                     </div>
                 </div>
