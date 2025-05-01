@@ -15,7 +15,7 @@ import { getAllPatients } from "../../api/patients/patient";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
 import ConsultationAlerts from "../../components/AlertsComponent/ConsultationAlerts";
-import { Plus, Trash2, Search } from "lucide-react";
+import { Plus, Trash2, Bell } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 
 function CalendarPage() {
@@ -240,6 +240,10 @@ function CalendarPage() {
           </div>
 
           <div className="md:w-full lg:w-80">
+            <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
+              <Bell size={20} />
+              Consultas de Hoje
+            </h2>
             <ConsultationAlerts events={events} />
           </div>
         </div>

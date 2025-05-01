@@ -67,10 +67,6 @@ const ConsultationAlerts = ({ events }) => {
 
   return (
     <div className="mb-6 space-y-2">
-      <h2 className="text-lg font-semibold flex items-center gap-2">
-        <Bell size={20} />
-        Consultas de Hoje
-      </h2>
       <div className="space-y-2">
         {todayConsultations.map((consultation) => {
           const timeRemaining = new Date(consultation.start) - currentTime;
