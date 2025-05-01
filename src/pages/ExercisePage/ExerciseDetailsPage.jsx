@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import MainLayout from "../../layouts/MainLayout";
 import { getExerciseById, deleteExerciseById, updateExerciseById } from "../../api/exercises/exercise";
-import BackButton from "../../components/ButtonComponent/BackButton";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
 import { Trash2, Pencil } from "lucide-react";
@@ -134,7 +133,6 @@ function ExerciseDetailsPage() {
       )}
 
       <div className="flex items-center justify-between mb-6">
-        <BackButton/>
         <div className="flex gap-4">
           <Button 
             variant="outline" 

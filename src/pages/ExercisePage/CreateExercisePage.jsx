@@ -4,7 +4,6 @@ import MainLayout from "../../layouts/MainLayout";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import { createExercise } from "../../api/exercises/exercise";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
-import BackButton from "../../components/ButtonComponent/BackButton";
 
 function CreateExercisePage() {
   const { categoryId } = useParams();
@@ -44,7 +43,6 @@ function CreateExercisePage() {
 
   return (
     <MainLayout>
-      <BackButton/>
       <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded shadow-md">
         <h1 className="text-3xl font-bold mb-6">Criar Novo Exercício</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4" encType="multipart/form-data">

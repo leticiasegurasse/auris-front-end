@@ -18,6 +18,8 @@ import ExerciseDetailsPage from '../pages/ExercisePage/ExerciseDetailsPage';
 
 import CalendarPage from '../pages/CalendarPage/CalendarPage';
 
+import EvolutionPage from '../pages/EvolutionPage/EvolutionPage';
+
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 
@@ -90,7 +92,7 @@ const AppRouter = () => (
         path={ROUTES.EVOLUTION}
         element={
           <PrivateRoute>
-            <HomePage />
+            <EvolutionPage />
           </PrivateRoute>
         }
       />

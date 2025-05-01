@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import MainLayout from "../../layouts/MainLayout";
 import Button from "../../components/ButtonComponent/ButtonComponent";
-import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import { ArrowBigLeftDash, Trash2 } from "lucide-react";
-import { getPatientById, updatePatientById, getPatientExercisesByPatientId, createPatientExercise, deletePatientExercise, createPatientDocument, getPatientDocuments, updatePatientDocument } from "../../api/patients/patient";
+import { getPatientById, updatePatientById } from "../../api/patients/patient";
+import { getPatientExercisesByPatientId, createPatientExercise, deletePatientExercise } from "../../api/patients/patientExercises";
+import { getPatientDocuments, createPatientDocument, updatePatientDocument } from "../../api/patients/patientDocuments";
 import { updateUserById } from "../../api/users/user";
 import { getAllCategories } from "../../api/categories/categories";
 import { getExercisesByCategory } from "../../api/exercises/exercise";
@@ -12,7 +13,6 @@ import AlertMessage from "../../components/AlertComponent/AlertMessage";
 
 function PatientDetailsPage() {
   const { id } = useParams();
-  const { goBack } = useCustomNavigate();
 
   const [alert, setAlert] = useState(null);
   const [patient, setPatient] = useState(null);
@@ -229,12 +229,6 @@ function PatientDetailsPage() {
       {alert && (
         <AlertMessage type={alert.type} message={alert.message} className="mb-4" onClose={() => setAlert(null)} />
       )}
-
-      <div className="w-full mb-6">
-        <Button variant="transparent" icon={ArrowBigLeftDash} onClick={goBack}>
-          Voltar
-        </Button>
-      </div>
 
       {/* Menu de navegação */}
       <div className="flex gap-4 mb-6">

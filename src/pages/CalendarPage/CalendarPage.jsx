@@ -166,7 +166,7 @@ function CalendarPage() {
 
   return (
     <MainLayout>
-      <div className="max-w-[1600px] mx-auto p-6">
+      <div>
         {alert && (
           <AlertMessage 
             type={alert.type} 
@@ -195,7 +195,7 @@ function CalendarPage() {
           </Button>
         </div>
 
-        <div className="flex gap-6">
+        <div className="flex flex-wrap gap-6">
           <div className="flex-1">
             <div className="bg-white rounded-lg shadow p-4">
               <FullCalendar
@@ -239,7 +239,7 @@ function CalendarPage() {
             </div>
           </div>
 
-          <div className="w-80">
+          <div className="md:w-full lg:w-80">
             <ConsultationAlerts events={events} />
           </div>
         </div>

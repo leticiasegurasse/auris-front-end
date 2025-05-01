@@ -10,6 +10,7 @@ from "lucide-react"; // exemplo, caso ainda não tenha importado
 import NavbarComponent from "../components/NavbarComponent/NavbarComponent";
 import { useCustomNavigate } from "../hooks/useCustomNavigate";
 import { useAuth } from "../hooks/useAuth";
+import BackButton from "../components/ButtonComponent/BackButton";
 
 
 function MainLayout ({ children }) {  
@@ -23,7 +24,8 @@ function MainLayout ({ children }) {
             <div className="flex">
                 <NavbarComponent/>
                 <div className="w-full">
-                    <div className="w-full h-[70px] flex items-center md:justify-end gap-3 p-2 bg-white">
+                    <div className="w-full h-[60px] flex items-center md:justify-end gap-3 p-7 bg-white">
+                        <BackButton/>
                         {/* <Bell/> */}
                         <div className="relative">
                             {/* Perfil do Usuário */}
@@ -32,27 +34,27 @@ function MainLayout ({ children }) {
                                 onClick={() => setDropdownOpen(!isDropdownOpen)}
                             >
                                 {/* Avatar com a inicial do usuário */}
-                                <div className="w-9 h-9 flex items-center justify-center bg-[var(--primary-color)] text-[var(--light-blue)] text-xl font-bold rounded-3xl shrink-0">
-                                    {user?.name_user?.charAt(0)|| "A"}
+                                <div className="w-7 h-7 flex items-center justify-center bg-[var(--primary-color)] text-[var(--light-blue)] text-lg font-bold rounded-3xl shrink-0">
+                                    {user?.name_user?.charAt(0).toUpperCase()|| "A"}
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <p className="text-gray-800 font-medium">{user?.name_user || "Usuário"}</p>
+                                    <p className="text-gray-800 font-medium text-sm">{user?.name_user || "Usuário"}</p>
                                     {isDropdownOpen ? <ChevronUp /> : <ChevronDown />}
                                 </div>  
                             </div>
 
                             {/* Submenu Dropdown */}
                             {isDropdownOpen && (
-                                <div className="absolute right-0 top-13 mt-2 w-full bg-white shadow-lg p-2 border border-gray-200">
+                                <div className="absolute right-0 top-10 mt-2 w-full bg-white shadow-lg p-2 border border-gray-200">
                                     <button 
-                                        className="flex items-center gap-3 w-full p-2 text-gray-800 hover:bg-gray-100 rounded-md transition cursor-pointer"
+                                        className="flex items-center gap-3 w-full p-2 text-gray-800 text-sm hover:bg-gray-100 rounded-md transition cursor-pointer"
                                         onClick={() => goTo("profile")}
                                     >
                                         <User className="w-5 h-5 text-gray-600" />
                                         Meu perfil
                                     </button>
                                     <button 
-                                        className="flex items-center gap-3 w-full p-2 text-gray-800 hover:bg-gray-100 rounded-md transition cursor-pointer"
+                                        className="flex items-center gap-3 w-full p-2 text-gray-800 text-sm hover:bg-gray-100 rounded-md transition cursor-pointer"
                                         onClick={() => logout()}
                                     >
                                         <LogOut className="w-5 h-5 text-gray-600" />
@@ -63,7 +65,7 @@ function MainLayout ({ children }) {
                         </div>
                     </div>
 
-                    <div className="w-full min-h-[calc(100vh-70px)] z-10 p-10">
+                    <div className="w-full min-h-[calc(100vh-70px)] z-10 py-8 px-10">
                         {children}
                     </div>
                 </div>

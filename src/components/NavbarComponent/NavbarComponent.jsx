@@ -33,7 +33,7 @@ function NavbarComponent() {
   }
 
   return (
-    <div className={`${isCollapsed ? "md:w-20" : "md:w-[400px] lg:w-[340px]"} transition-all`}>
+    <div className={`${isCollapsed ? "md:w-20" : "md:w-[270px] lg:w-[230px]"} transition-all`}>
       {/* Botão para abrir menu no mobile */}
       <button
         onClick={toggleSidebar}
@@ -45,7 +45,7 @@ function NavbarComponent() {
       {/* Sidebar */}
       <aside
         className={`flex flex-col items-center gap-7 py-3 fixed ${
-          isCollapsed ? "w-20" : "w-[290px]"
+          isCollapsed ? "w-20" : "w-[220px]"
         } bg-white h-screen shadow-lg transition-all z-40 ${
           isOpen ? "left-0" : "-left-[290px]"
         } md:left-0`}
@@ -103,7 +103,7 @@ function NavbarComponent() {
               >
                 <a
                   href={item.path}
-                  className={`w-full flex items-center ${isCollapsed ? "justify-center" : "justify-start"} gap-3 py-4 px-4 rounded-md transition duration-300 hover:bg-[var(--light-blue)] group
+                  className={`w-full flex items-center text-sm ${isCollapsed ? "justify-center" : "justify-start"} gap-3 py-4 px-4 rounded-md transition duration-300 hover:bg-[var(--light-blue)] group
                   ${
                     location.pathname === item.path ? "bg-gray-100" : ""
                   }`}
@@ -127,7 +127,7 @@ function NavbarComponent() {
             ))}
 
             {/* Menu de Ajuda e Suporte */}
-            <li className="w-[90%] border-t border-gray-100 pt-4 group">
+            <li className="border-t border-gray-100 pt-4 group">
               <a
                 href="https://wa.me/5522996057202"
                 target="_blank"
@@ -135,7 +135,7 @@ function NavbarComponent() {
                 className={`flex items-center ${isCollapsed ? "justify-center" : "justify-start"} gap-3 py-2 px-4 rounded-md`}
               >
                 <Headset className={`${isCollapsed ? "w-5 h-5" : "w-4 h-4"} text-gray-600 group-hover:text-[var(--secondary-color)]`} />
-                {!isCollapsed && <span className="text-gray-800">Ajuda e Suporte</span>}
+                {!isCollapsed && <span className="text-gray-800 text-sm">Ajuda e Suporte</span>}
               </a>
             </li>
           </ul>

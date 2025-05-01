@@ -7,7 +7,6 @@ import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import { useAuth } from "../../hooks/useAuth";
 import { registerPatientRequest } from "../../api/patients/patient";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
-import BackButton from "../../components/ButtonComponent/BackButton";
 
 function NewPatientsPage() {
   const [alert, setAlert] = useState(null);
@@ -60,7 +59,6 @@ function NewPatientsPage() {
         <AlertMessage type={alert.type} message={alert.message} className="mb-4" onClose={() => setAlert(null)} />
       )}
 
-      <BackButton/> 
       <div className="w-full max-w-xl mx-auto p-4">
         <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-2xl shadow-xl">
           <div>
