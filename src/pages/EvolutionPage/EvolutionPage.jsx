@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Plus, Search, Filter, X } from 'lucide-react';
+import { FileText, Plus, Search, Filter, X, User } from 'lucide-react';
 import { ROUTES } from '../../config/routes';
 import MainLayout from '../../layouts/MainLayout';
 import { getAllPatientDocuments } from '../../api/patients/patientDocuments';
+import { getAllPatients } from '../../api/patients/patient';
 import AlertMessage from '../../components/AlertComponent/AlertMessage';
+import { createPatientDocument } from '../../api/patients/patientDocuments';
 
 function EvolutionPage() {
   const [documents, setDocuments] = useState([]);
@@ -14,23 +16,36 @@ function EvolutionPage() {
   const [alert, setAlert] = useState(null);
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddDocumentModalOpen, setIsAddDocumentModalOpen] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [documentType, setDocumentType] = useState('');
+  const [report, setReport] = useState('');
+  const [observation, setObservation] = useState('');
+  const [patients, setPatients] = useState([]);
 
   useEffect(() => {
-    async function fetchDocuments() {
+    async function fetchData() {
       try {
-        const response = await getAllPatientDocuments();
-        setDocuments(response);
-        console.log(response);
+        const [documentsResponse, patientsResponse] = await Promise.all([
+          getAllPatientDocuments(),
+          getAllPatients()
+        ]);
+        setDocuments(documentsResponse);
+        setPatients(patientsResponse.data);
       } catch (error) {
-        console.error('Erro ao buscar documentos:', error);
-        setAlert({ type: 'error', message: 'Erro ao carregar documentos' });
+        console.error('Erro ao buscar dados:', error);
+        setAlert({ type: 'error', message: 'Erro ao carregar dados' });
       } finally {
         setLoading(false);
       }
     }
 
-    fetchDocuments();
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    console.log(patients);
+  }, [patients]);
 
   const filteredDocuments = documents.filter(doc => {
     const matchesSearch = doc.report.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -49,6 +64,45 @@ function EvolutionPage() {
     setSelectedDocument(null);
   };
 
+  const handleAddDocument = () => {
+    setIsAddDocumentModalOpen(true);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (!selectedPatient) {
+        setAlert({ type: 'error', message: 'Selecione um paciente' });
+        return;
+      }
+
+      const documentData = {
+        patientId: selectedPatient._id,
+        type: documentType,
+        report: report,
+        observation: observation
+      };
+
+      await createPatientDocument(documentData);
+      
+      // Atualizar a lista de documentos
+      const updatedDocuments = await getAllPatientDocuments();
+      setDocuments(updatedDocuments);
+      
+      // Limpar formulário e fechar modal
+      setSelectedPatient(null);
+      setDocumentType('');
+      setReport('');
+      setObservation('');
+      setIsAddDocumentModalOpen(false);
+      
+      setAlert({ type: 'success', message: 'Documento salvo com sucesso!' });
+    } catch (error) {
+      console.error('Erro ao salvar documento:', error);
+      setAlert({ type: 'error', message: 'Erro ao salvar documento' });
+    }
+  };
+
   return (
     <MainLayout>
       <div>
@@ -56,15 +110,34 @@ function EvolutionPage() {
           <AlertMessage type={alert.type} message={alert.message} className="mb-4" onClose={() => setAlert(null)} />
         )}
 
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-gray-800">Evoluções</h1>
-          <Link
-            to={ROUTES.EVOLUTION}
+          <button
+            onClick={handleAddDocument}
             className="flex items-center gap-2 bg-[var(--primary-color)] text-white px-4 py-2 rounded-lg hover:bg-[var(--dark-blue)] transition"
           >
             <Plus size={20} />
-            Nova Evolução
-          </Link>
+            Adicionar Documento
+          </button>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <h3 className="text-gray-600 text-sm">Total de Documentos</h3>
+            <p className="text-2xl font-bold text-[var(--primary-color)]">{documents.length}</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <h3 className="text-gray-600 text-sm">Total de Evoluções</h3>
+            <p className="text-2xl font-bold text-[var(--primary-color)]">
+              {documents.filter(doc => doc.type === 'evolucao').length}
+            </p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <h3 className="text-gray-600 text-sm">Total de Anamneses</h3>
+            <p className="text-2xl font-bold text-[var(--primary-color)]">
+              {documents.filter(doc => doc.type === 'anamnese').length}
+            </p>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6">
@@ -125,6 +198,102 @@ function EvolutionPage() {
             </div>
           )}
         </div>
+
+        {/* Modal de Adicionar Documento */}
+        {isAddDocumentModalOpen && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-gray-800">Adicionar Novo Documento</h2>
+                <button
+                  onClick={() => setIsAddDocumentModalOpen(false)}
+                  className="text-gray-500 hover:text-gray-700 cursor-pointer"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Paciente
+                  </label>
+                  <select
+                    value={selectedPatient?._id || ''}
+                    onChange={(e) => {
+                      const patient = patients.find(p => p._id === e.target.value);
+                      setSelectedPatient(patient);
+                    }}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
+                    required
+                  >
+                    <option value="">Selecione o paciente</option>
+                    {patients.map((patient) => (
+                      <option key={patient._id} value={patient._id}>
+                        {patient.userId?.name_user}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tipo de Documento
+                  </label>
+                  <select
+                    value={documentType}
+                    onChange={(e) => setDocumentType(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
+                    required
+                  >
+                    <option value="">Selecione o tipo</option>
+                    <option value="anamnese">Anamnese</option>
+                    <option value="evolucao">Evolução</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Relatório
+                  </label>
+                  <textarea
+                    value={report}
+                    onChange={(e) => setReport(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] h-32"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Observação
+                  </label>
+                  <textarea
+                    value={observation}
+                    onChange={(e) => setObservation(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] h-20"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsAddDocumentModalOpen(false)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:bg-[var(--dark-blue)]"
+                  >
+                    Salvar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
         {/* Modal */}
         {isModalOpen && selectedDocument && (

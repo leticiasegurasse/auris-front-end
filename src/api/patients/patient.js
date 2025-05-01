@@ -4,8 +4,15 @@ export const registerPatientRequest = (data) => {
   return api.post("/auth/register", data);
 };
 
-export const getAllPatients = () => {
-    return api.get("/patients");
+export const getAllPatients = async () => {
+    try {
+        const response = await api.get("/patients");
+        console.log('Resposta da API em getAllPatients:', response);
+        return response;
+    } catch (error) {
+        console.error('Erro ao buscar pacientes:', error);
+        throw error;
+    }
 };
 
 export const getPatientById = async (id) => {
