@@ -5,6 +5,7 @@ import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import { useEffect, useState } from "react";
 import { getAllPatients } from "../../api/patients/patient";
 import { getAppointments } from "../../api/calendar/calendar";
+import { getRecentLogs } from "../../api/logs/logs";
 import { Users, Calendar, ClipboardList, Activity, Clock } from "lucide-react";
 import ConsultationAlerts from "../../components/AlertsComponent/ConsultationAlerts";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
@@ -17,6 +18,7 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [alert, setAlert] = useState(null);
+  const [recentLogs, setRecentLogs] = useState([]);
 
   useEffect(() => {
     async function loadData() {
@@ -26,6 +28,7 @@ function HomePage() {
         ]);
 
         loadAppointments();
+        loadRecentLogs();
         
         setPatientsCount(patientsResponse.data.length);
         
@@ -73,6 +76,15 @@ function HomePage() {
     } catch (error) {
       console.error("Erro ao carregar consultas:", error);
       setAlert({ type: "error", message: "Erro ao carregar consultas: " + error });
+    }
+  };
+
+  const loadRecentLogs = async () => {
+    try {
+      const logs = await getRecentLogs();
+      setRecentLogs(logs.slice(0, 10)); // Pegar apenas os 5 logs mais recentes
+    } catch (error) {
+      console.error("Erro ao carregar logs:", error);
     }
   };
 
@@ -136,46 +148,86 @@ function HomePage() {
           </div>
         </div>
 
-        {/* Consultas de Hoje */}
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Consultas de Hoje</h2>
-            <Button onClick={() => goTo("CALENDAR")} variant="outline" size="sm">
-              Ver Calendário
-            </Button>
-          </div>
-          
-          {loading ? (
-            <p>Carregando...</p>
-          ) : (
-            <ConsultationAlerts events={events} />
-          )}
-        </div>
-
-        {/* Ações Rápidas */}
+        {/* Grid de duas colunas */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <Button onClick={() => goTo("NEW_PATIENT")} variant="primary" size="full">
-                Novo Paciente
-              </Button>
-              <Button onClick={() => goTo("CALENDAR")} variant="primary" size="full">
-                Agendar Consulta
-              </Button>
-              <Button onClick={() => goTo("CATEGORIES")} variant="primary" size="full">
-                Exercícios
-              </Button>
-              <Button onClick={() => goTo("EVOLUTION")} variant="primary" size="full">
-                Evoluções
-              </Button>
+          {/* Coluna da esquerda */}
+          <div className="space-y-6">
+            {/* Consultas de Hoje */}
+            <div className="bg-white p-6 rounded-xl shadow-md">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold">Consultas de Hoje</h2>
+                <Button onClick={() => goTo("CALENDAR")} variant="outline" size="sm">
+                  Ver Calendário
+                </Button>
+              </div>
+              
+              <div className="max-h-[250px] overflow-y-auto pr-2">
+                {loading ? (
+                  <p>Carregando...</p>
+                ) : (
+                  <ConsultationAlerts events={events} />
+                )}
+              </div>
+            </div>
+
+            {/* Ações Rápidas */}
+            <div className="bg-white p-6 rounded-xl shadow-md">
+              <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
+              <div className="grid grid-cols-2 gap-4">
+                <Button onClick={() => goTo("NEW_PATIENT")} variant="primary" size="full">
+                  Novo Paciente
+                </Button>
+                <Button onClick={() => goTo("CALENDAR")} variant="primary" size="full">
+                  Agendar Consulta
+                </Button>
+                <Button onClick={() => goTo("CATEGORIES")} variant="primary" size="full">
+                  Exercícios
+                </Button>
+                <Button onClick={() => goTo("EVOLUTION")} variant="primary" size="full">
+                  Evoluções
+                </Button>
+              </div>
             </div>
           </div>
 
+          {/* Coluna da direita - Atividades Recentes */}
           <div className="bg-white p-6 rounded-xl shadow-md">
             <h2 className="text-xl font-semibold mb-4">Atividades Recentes</h2>
-            <div className="space-y-4">
-              <p className="text-gray-500">Nenhuma atividade recente</p>
+            <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-400px)] pr-2">
+              {loading ? (
+                <p>Carregando...</p>
+              ) : recentLogs.length === 0 ? (
+                <p className="text-gray-500">Nenhuma atividade recente</p>
+              ) : (
+                <div className="space-y-4">
+                  {recentLogs.map((log) => (
+                    <div key={log._id} className="border-l-4 border-blue-500 pl-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-medium">
+                            {log.user.email} {log.action.toLowerCase()} {log.entity}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {new Date(log.timestamp).toLocaleString('pt-BR')}
+                          </p>
+                        </div>
+                      </div>
+                      {log.changes && (
+                        <div className="mt-2 text-sm text-gray-600">
+                          <p>Alterações:</p>
+                          <ul className="list-disc list-inside">
+                            {Object.entries(log.changes).map(([key, value]) => (
+                              <li key={key}>
+                                {key}: {value}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
