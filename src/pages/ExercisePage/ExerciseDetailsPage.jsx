@@ -6,6 +6,7 @@ import Button from "../../components/ButtonComponent/ButtonComponent";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
 import { Trash2, Pencil, ArrowLeft, Play, BookOpen, FileAudio, ChevronRight } from "lucide-react";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
+import PageHeader from "../../components/PageHeader/PageHeader";
 
 function ExerciseDetailsPage() {
   const { exerciseId } = useParams();
@@ -144,31 +145,26 @@ function ExerciseDetailsPage() {
     <MainLayout>
       <div>
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-8">
-            <button 
-              onClick={goBack}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors bg-white p-3 rounded-full shadow-sm hover:shadow-md"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-800">{exercise.title}</h1>
-            </div>
+          <div className="flex justify-between items-center gap-4 mb-8">
+            <PageHeader 
+                title={exercise.title}
+                description={exercise.description}
+              />
             <div className="flex gap-2">
-              <Button 
+              <button 
                 onClick={handleEditClick}
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                className="flex items-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200"
               >
                 <Pencil size={18} />
                 Editar
-              </Button>
-              <Button 
+              </button>
+              <button 
                 onClick={() => setIsDeleteModalOpen(true)}
-                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                className="flex items-center gap-2 px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200"
               >
                 <Trash2 size={18} />
                 Excluir
-              </Button>
+              </button>
             </div>
           </div>
 
@@ -287,13 +283,12 @@ function ExerciseDetailsPage() {
               <div className="flex justify-end gap-4">
                 <Button 
                   onClick={handleCancelEdit}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-lg transition-all duration-300"
+                  variant="outline"
                 >
                   Cancelar
                 </Button>
                 <Button 
                   onClick={handleSaveEdit}
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
                 >
                   Salvar
                 </Button>
@@ -315,10 +310,10 @@ function ExerciseDetailsPage() {
               Tem certeza que deseja excluir o exercício "{exercise.title}"? 
               Esta ação não pode ser desfeita.
             </p>
-            <div className="flex justify-end gap-4">
+            <div className="flex justify-center gap-4">
               <Button 
                 onClick={() => setIsDeleteModalOpen(false)}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-lg transition-all duration-300"
+                variant="outline"
               >
                 Cancelar
               </Button>

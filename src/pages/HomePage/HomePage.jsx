@@ -138,7 +138,7 @@ function HomePage() {
           <div className="bg-white p-6 rounded-xl shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500">Evoluções</p>
+                <p className="text-gray-500">Documentos</p>
                 <h3 className="text-3xl font-bold">5</h3>
               </div>
               <div className="bg-orange-100 p-3 rounded-full">
@@ -148,10 +148,28 @@ function HomePage() {
           </div>
         </div>
 
+        {/* Ações Rápidas */}
+        <div className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
+          <div className="grid grid-cols-4 gap-4">
+            <Button onClick={() => goTo("NEW_PATIENT")} variant="primary" size="full">
+              Novo Paciente
+            </Button>
+            <Button onClick={() => goTo("CALENDAR")} variant="primary" size="full">
+              Agendar Consulta
+            </Button>
+            <Button onClick={() => goTo("CATEGORIES")} variant="primary" size="full">
+              Exercícios
+            </Button>
+            <Button onClick={() => goTo("EVOLUTION")} variant="primary" size="full">
+              Documentos
+            </Button>
+          </div>
+        </div>
+
         {/* Grid de duas colunas */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Coluna da esquerda */}
-          <div className="space-y-6">
             {/* Consultas de Hoje */}
             <div className="bg-white p-6 rounded-xl shadow-md">
               <div className="flex items-center justify-between mb-4">
@@ -169,26 +187,6 @@ function HomePage() {
                 )}
               </div>
             </div>
-
-            {/* Ações Rápidas */}
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <Button onClick={() => goTo("NEW_PATIENT")} variant="primary" size="full">
-                  Novo Paciente
-                </Button>
-                <Button onClick={() => goTo("CALENDAR")} variant="primary" size="full">
-                  Agendar Consulta
-                </Button>
-                <Button onClick={() => goTo("CATEGORIES")} variant="primary" size="full">
-                  Exercícios
-                </Button>
-                <Button onClick={() => goTo("EVOLUTION")} variant="primary" size="full">
-                  Evoluções
-                </Button>
-              </div>
-            </div>
-          </div>
 
           {/* Coluna da direita - Atividades Recentes */}
           <div className="bg-white p-6 rounded-xl shadow-md">

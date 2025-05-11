@@ -7,6 +7,7 @@ import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
 import { Pencil, Trash2, Edit2, ArrowLeft, Plus, Play, BookOpen, ChevronRight } from "lucide-react";
+import PageHeader from "../../components/PageHeader/PageHeader";
 
 function ExercisesByCategoryPage() {
   const { categoryId } = useParams();
@@ -146,35 +147,33 @@ function ExercisesByCategoryPage() {
       <div>
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-4 mb-8">
-            <button 
-              onClick={handleBack}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors bg-white p-3 rounded-full shadow-sm hover:shadow-md"
-            >
-              <ArrowLeft size={20} />
-            </button>
             <div className="flex-1">
-              <div className="flex items-center gap-4">
-                <h1 className="text-3xl font-bold text-gray-800">{category.title}</h1>
-                <div className="flex gap-2">
+              <PageHeader 
+                title={category.title}
+                description={category.description}
+              />
+              <div className="flex items-center gap-4 mt-4">
+                <div className="flex gap-3">
                   <button
                     onClick={handleEditClick}
-                    className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200"
                   >
                     <Edit2 size={18} />
+                    <span className="text-sm font-medium">Editar Categoria</span>
                   </button>
                   <button
                     onClick={() => setIsDeleteModalOpen(true)}
-                    className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200"
                   >
                     <Trash2 size={18} />
+                    <span className="text-sm font-medium">Excluir Categoria</span>
                   </button>
                 </div>
               </div>
-              <p className="text-gray-600 mt-2">{category.description}</p>
             </div>
             <Button 
               onClick={handleAddExercise}
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
             >
               <Plus size={20} />
               Novo Exercício
@@ -223,7 +222,7 @@ function ExercisesByCategoryPage() {
 
           {exercises.length === 0 && (
             <div className="text-center py-12">
-              <div className="bg-white rounded-xl p-8 max-w-md mx-auto shadow-lg">
+              <div className="bg-white rounded-xl p-8 max-w-md mx-auto shadow-lg flex flex-col items-center justify-center">
                 <div className="p-4 bg-blue-100 rounded-full w-16 h-16 mx-auto mb-4">
                   <Play className="text-blue-600 mx-auto" size={32} />
                 </div>
@@ -231,7 +230,6 @@ function ExercisesByCategoryPage() {
                 <p className="text-gray-600 mb-4">Comece criando seu primeiro exercício nesta categoria</p>
                 <Button 
                   onClick={handleAddExercise}
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
                 >
                   Criar Primeiro Exercício
                 </Button>
@@ -278,13 +276,12 @@ function ExercisesByCategoryPage() {
               <div className="flex justify-end gap-4">
                 <Button 
                   onClick={handleCancelEdit}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-lg transition-all duration-300"
+                  variant="outline"
                 >
                   Cancelar
                 </Button>
                 <Button 
                   onClick={handleSaveEdit}
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
                 >
                   Salvar
                 </Button>

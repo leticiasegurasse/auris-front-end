@@ -46,7 +46,7 @@ function MainLayout ({ children }) {
                                 <div className="absolute right-0 top-10 mt-2 w-full bg-white shadow-lg p-2 border border-gray-200">
                                     <button 
                                         className="flex items-center gap-3 w-full p-2 text-gray-800 text-sm hover:bg-gray-100 rounded-md transition cursor-pointer"
-                                        onClick={() => goTo("profile")}
+                                        onClick={() => goTo("PROFILE")}
                                     >
                                         <User className="w-5 h-5 text-gray-600" />
                                         Meu perfil

@@ -4,6 +4,7 @@ export const ROUTES = {
 
     HOME: '/',
     DASHBOARD: '/dashboard',
+    PROFILE: '/profile',
 
     PATIENTS: '/patients',
     PATIENT: '/patients/:id',
@@ -16,7 +17,7 @@ export const ROUTES = {
     
     EXERCISES_BY_CATEGORY: '/exercises/category/:categoryId',
     NEW_EXERCISE: '/exercises/new_exercise/:categoryId',
-    EXERCISE_DETAILS: '/exercise/:exerciseId',
+    EXERCISE_DETAILS: '/exercises/:exerciseId',
 
     CALENDAR: '/calendar',
 };

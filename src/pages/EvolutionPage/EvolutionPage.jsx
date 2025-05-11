@@ -7,6 +7,7 @@ import { getAllPatientDocuments } from '../../api/patients/patientDocuments';
 import { getAllPatients } from '../../api/patients/patient';
 import AlertMessage from '../../components/AlertComponent/AlertMessage';
 import { createPatientDocument } from '../../api/patients/patientDocuments';
+import Button from '../../components/ButtonComponent/ButtonComponent';
 
 function EvolutionPage() {
   const [documents, setDocuments] = useState([]);
@@ -117,13 +118,12 @@ function EvolutionPage() {
               <h1 className="text-3xl font-bold text-gray-800">Documentos</h1>
               <p className="text-gray-600 mt-1">Gerencie e acompanhe os documentos dos pacientes</p>
             </div>
-            <button
+            <Button
               onClick={handleAddDocument}
-              className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-6 py-3 rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-indigo-500/25 transform hover:scale-[1.02]"
             >
               <Plus size={20} />
               Adicionar Documento
-            </button>
+            </Button>
           </div>
 
           {/* Stats Cards */}
@@ -324,19 +324,17 @@ function EvolutionPage() {
                 </div>
 
                 <div className="flex justify-end gap-4">
-                  <button
-                    type="button"
+                  <Button
                     onClick={() => setIsAddDocumentModalOpen(false)}
-                    className="px-6 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+                    variant="outline"
                   >
                     Cancelar
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="submit"
-                    className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-indigo-500/25"
                   >
                     Salvar
-                  </button>
+                  </Button>
                 </div>
               </form>
             </div>

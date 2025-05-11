@@ -4,7 +4,9 @@ import Button from "../../components/ButtonComponent/ButtonComponent";
 import AuthTabs from "../../components/ButtonComponent/AuthTabs";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import { loginRequest } from "../../api/auth";
-import { useAuth } from "../../hooks/useAuth"; // ✅ CORRETO
+import { useAuth } from "../../hooks/useAuth"; 
+import SubLayout from "../../layouts/SubLayout";
+
 
 
 function LoginPage() {
@@ -38,29 +40,10 @@ function LoginPage() {
   }  
 
   return (
-    <div>
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 p-4 relative overflow-hidden">
-        {/* Elementos decorativos */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        </div>
-
+    <SubLayout>
         <div className="w-full max-w-md bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-8 space-y-8 transform transition-all duration-500 hover:scale-[1.02] relative z-10 border border-white/20">
-          {/* Logo ou ícone decorativo */}
-          <div className="flex justify-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg transform rotate-6 hover:rotate-0 transition-transform duration-500">
-              <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-          </div>
-
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-bold text-white">Bem-vindo de volta</h1>
-            <p className="text-white/80">Entre com suas credenciais para acessar sua conta</p>
           </div>
 
           <AuthTabs />
@@ -112,18 +95,12 @@ function LoginPage() {
             <Button
               type="submit"
               size="full"
-              variant="secondary"
-              className="!rounded-xl !py-3 !text-base font-medium transform transition-all duration-200 hover:scale-[1.02] bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white border-none shadow-lg hover:shadow-indigo-500/25"
             >
               Entrar
             </Button>
           </form>
-
-          {/* Elemento decorativo inferior */}
-          <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-full blur-xl"></div>
         </div>
-      </div>
-    </div>
+    </SubLayout>
   );
 }
 
