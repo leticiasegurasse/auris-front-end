@@ -8,6 +8,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { registerPatientRequest } from "../../api/patients/patient";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
 import { User, Mail, Calendar, Stethoscope, ArrowLeft, Lock } from "lucide-react";
+import PageHeader from "../../components/PageHeader/PageHeader";
 
 function NewPatientsPage() {
   const [alert, setAlert] = useState(null);
@@ -56,21 +57,10 @@ function NewPatientsPage() {
   return (
     <MainLayout>
       <div>
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 mb-8">
-            <button
-              onClick={() => goTo("PTIENTS")}
-              className="p-2 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow"
-            >
-              <ArrowLeft size={20} className="text-gray-600" />
-            </button>
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-blue-100 rounded-full">
-                <User className="text-blue-600" size={24} />
-              </div>
-              <h1 className="text-3xl font-bold text-gray-800">Novo Paciente</h1>
-            </div>
-          </div>
+        <div className=" mx-auto">
+        <PageHeader 
+          title="Adicionar Novo Paciente"
+        />
 
           {alert && (
             <AlertMessage

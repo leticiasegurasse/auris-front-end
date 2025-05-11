@@ -11,8 +11,8 @@ function Button({
 }) {
   // Estilos baseados na variante
   const variants = {
-    primary: "bg-[var(--primary-color)] hover:bg-[var(--dark-blue)] text-white cursor-pointer",
-    secondary: "bg-[var(--secondary-color)] hover:bg-[var(--dark-blue)] text-white shadow border border-gray-200 cursor-pointer",
+    primary: "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer",
+    secondary: "bg-[var(--light-green)] hover:bg-[var(--light-green)] text-white shadow cursor-pointer",
     cta: "bg-[var(--orange)] hover:bg-[#D19119] text-white cursor-pointer",
     transparent: "text-[var(--primary-color)] cursor-pointer",
     success: "bg-green-500 hover:bg-green-600 text-white cursor-pointer",

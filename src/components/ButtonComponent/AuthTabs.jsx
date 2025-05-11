@@ -16,8 +16,8 @@ export default function AuthTabs() {
         className={`py-2 font-bold transition
           ${
             isLogin
-              ? "px-4 text-[var(--secondary-color)] border-b-2"
-              : "cursor-pointer px-6 rounded-full text-[var(--secondary-color)] hover:bg-[var(--secondary-color)] hover:text-white"
+              ? "px-4 text-white border-b-2"
+              : "cursor-pointer px-6 rounded-full text-[var(--light-blue)] hover:bg-[var(--light-green)] hover:text-white"
           }`}
       >
         Login
@@ -29,8 +29,8 @@ export default function AuthTabs() {
         className={`py-2 font-bold transition
           ${
             isRegister
-              ? "px-4 text-[var(--secondary-color)] border-b-2"
-              : "cursor-pointer px-6 rounded-full text-[var(--secondary-color)] hover:bg-[var(--secondary-color)] hover:text-white"
+              ? "px-4 text-white border-b-2"
+              : "cursor-pointer px-6 rounded-full text-white hover:bg-[var(--light-green)] hover:text-white"
           }`}
       >
         Registrar

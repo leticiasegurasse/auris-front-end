@@ -48,7 +48,6 @@ function PatientsPage() {
             </div>
             <Button
               onClick={() => goTo("NEW_PATIENT")}
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
             >
               <Plus size={20} />
               Novo Paciente
@@ -57,7 +56,7 @@ function PatientsPage() {
 
           {patients.length === 0 ? (
             <div className="text-center py-12">
-              <div className="bg-white rounded-xl p-8 max-w-md mx-auto shadow-lg">
+              <div className="bg-white rounded-xl p-8 max-w-md mx-auto shadow-lg flex flex-col items-center justify-center">
                 <div className="p-4 bg-blue-100 rounded-full w-16 h-16 mx-auto mb-4">
                   <User className="text-blue-600 mx-auto" size={32} />
                 </div>
@@ -65,7 +64,6 @@ function PatientsPage() {
                 <p className="text-gray-600 mb-4">Comece cadastrando seu primeiro paciente</p>
                 <Button
                   onClick={() => goTo("NEW_PATIENT")}
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
                 >
                   Cadastrar Primeiro Paciente
                 </Button>

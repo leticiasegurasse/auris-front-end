@@ -10,6 +10,8 @@ import { updateUserById } from "../../api/users/user";
 import { getAllCategories } from "../../api/categories/categories";
 import { getExercisesByCategory } from "../../api/exercises/exercise";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
+import ChatComponent from "../../components/ChatComponent/ChatComponent";
+import PageHeader from "../../components/PageHeader/PageHeader";
 
 function PatientDetailsPage() {
   const { id } = useParams();
@@ -45,6 +47,8 @@ function PatientDetailsPage() {
     birthDate: "",
     diagnosis: "",
     status: "",
+    city: "",
+    notes: "",
   });
 
   useEffect(() => {
@@ -58,6 +62,8 @@ function PatientDetailsPage() {
           birthDate: patientData.birthDate ? patientData.birthDate.slice(0, 10) : "",
           diagnosis: patientData.diagnosis || "",
           status: patientData.status || "ativo",
+          city: patientData.city || "",
+          notes: patientData.notes || "",
         });
 
         const exercisesData = await getPatientExercisesByPatientId(id);
@@ -97,6 +103,8 @@ function PatientDetailsPage() {
         diagnosis: formData.diagnosis,
         birthDate: formData.birthDate,
         status: formData.status,
+        city: formData.city,
+        notes: formData.notes,
       };
 
       await updatePatientById(id, updatedPatientData);
@@ -230,38 +238,142 @@ function PatientDetailsPage() {
         <AlertMessage type={alert.type} message={alert.message} className="mb-4" onClose={() => setAlert(null)} />
       )}
 
+      <PageHeader 
+        title="Detalhes do Paciente"
+        description={patient?.userId?.name_user}
+      />
+
       {/* Menu de navegação */}
-      <div className="flex gap-4 mb-6">
-        <Button variant={activeTab === "details" ? "primary" : "outline"} onClick={() => setActiveTab("details")}>
-          Dados do Paciente
-        </Button>
-        <Button variant={activeTab === "exercises" ? "primary" : "outline"} onClick={() => setActiveTab("exercises")}>
-          Exercícios
-        </Button>
-        <Button variant={activeTab === "documents" ? "primary" : "outline"} onClick={() => setActiveTab("documents")}>
-          Documentos
-        </Button>
+      <div className="mb-8">
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="flex">
+            <button
+              onClick={() => setActiveTab("details")}
+              className={`flex-1 py-4 px-6 text-center transition-all duration-200 relative ${
+                activeTab === "details"
+                  ? "text-blue-600 font-medium"
+                  : "text-gray-600 hover:text-blue-500"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                </svg>
+                <span>Dados do Paciente</span>
+              </div>
+              {activeTab === "details" && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"></div>
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveTab("exercises")}
+              className={`flex-1 py-4 px-6 text-center transition-all duration-200 relative ${
+                activeTab === "exercises"
+                  ? "text-blue-600 font-medium"
+                  : "text-gray-600 hover:text-blue-500"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                </svg>
+                <span>Exercícios</span>
+              </div>
+              {activeTab === "exercises" && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"></div>
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveTab("documents")}
+              className={`flex-1 py-4 px-6 text-center transition-all duration-200 relative ${
+                activeTab === "documents"
+                  ? "text-blue-600 font-medium"
+                  : "text-gray-600 hover:text-blue-500"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                </svg>
+                <span>Documentos</span>
+              </div>
+              {activeTab === "documents" && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"></div>
+              )}
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Conteúdo Condicional */}
       {loading ? (
-        <p className="text-gray-500">Carregando...</p>
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
       ) : activeTab === "details" ? (
-        <div className="space-y-4 bg-white shadow-md p-6 rounded-xl">
-          <h2 className="text-2xl font-bold text-gray-700 mb-4">Editar Paciente</h2>
+        <div className="space-y-6 bg-white shadow-md p-8 rounded-xl">
+          <h2 className="text-2xl font-bold text-gray-700 mb-6">Editar Paciente</h2>
 
-          <div className="space-y-4">
-            <InputField label="Nome" name="name_user" value={formData.name_user} onChange={handleChange} />
-            <InputField label="Email" name="email" type="email" value={formData.email} onChange={handleChange} />
-            <InputField label="Data de Nascimento" name="birthDate" type="date" value={formData.birthDate} onChange={handleChange} />
-            <InputField label="Diagnóstico" name="diagnosis" value={formData.diagnosis} onChange={handleChange} />
-            <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <InputField 
+              label="Nome" 
+              name="name_user" 
+              value={formData.name_user} 
+              onChange={handleChange}
+              className="bg-gray-50" 
+            />
+            <InputField 
+              label="Email" 
+              name="email" 
+              type="email" 
+              value={formData.email} 
+              onChange={handleChange}
+              className="bg-gray-50" 
+            />
+            <InputField 
+              label="Data de Nascimento" 
+              name="birthDate" 
+              type="date" 
+              value={formData.birthDate} 
+              onChange={handleChange}
+              className="bg-gray-50" 
+            />
+            <InputField 
+              label="Cidade" 
+              name="city" 
+              value={formData.city} 
+              onChange={handleChange}
+              className="bg-gray-50" 
+            />
+            <div className="md:col-span-2">
+              <InputField 
+                label="Diagnóstico" 
+                name="diagnosis" 
+                value={formData.diagnosis} 
+                onChange={handleChange}
+                className="bg-gray-50" 
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block font-medium text-gray-700 mb-1">Anotações que deseja compartilhar com a IA</label>
+              <textarea
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                rows="4"
+                placeholder="Digite as anotações sobre o paciente..."
+              />
+            </div>
+            <div className="md:col-span-2">
               <label className="block font-medium text-gray-700 mb-1">Status</label>
               <select
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-2"
+                className="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="Ativo">Ativo</option>
                 <option value="Inativo">Inativo</option>
@@ -269,40 +381,78 @@ function PatientDetailsPage() {
             </div>
           </div>
 
-          <Button onClick={handleSave} className="mt-4">
-            Salvar Alterações
-          </Button>
+          <div className="flex justify-end mt-8">
+            <Button onClick={handleSave} className="px-8">
+              Salvar Alterações
+            </Button>
+          </div>
         </div>
       ) : activeTab === "exercises" ? (
-        <div className="space-y-4 bg-white shadow-md p-6 rounded-xl">
-          <h2 className="text-2xl font-bold text-gray-700 mb-4">Exercícios do Paciente</h2>
+        <div className="space-y-6 bg-white shadow-md p-8 rounded-xl">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-700">Exercícios do Paciente</h2>
+            <Button onClick={handleOpenModal} variant="primary">
+              + Atribuir Novo Exercício
+            </Button>
+          </div>
           
           {/* Abas dos exercícios */}
-          <div className="flex gap-4 mb-6">
-            <Button 
-              variant={exerciseTab === "pending" ? "primary" : "outline"} 
-              onClick={() => setExerciseTab("pending")}
-            >
-              Pendentes
-            </Button>
-            <Button 
-              variant={exerciseTab === "completed" ? "primary" : "outline"} 
-              onClick={() => setExerciseTab("completed")}
-            >
-              Concluídos
-            </Button>
-            <Button 
-              variant={exerciseTab === "waiting" ? "primary" : "outline"} 
-              onClick={() => setExerciseTab("waiting")}
-            >
-              Aguardando Avaliação
-            </Button>
+          <div className="mb-6">
+            <div className="bg-gray-50 rounded-xl p-1.5 inline-flex">
+              <button
+                onClick={() => setExerciseTab("pending")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  exerciseTab === "pending"
+                    ? "bg-white text-blue-600 shadow-sm"
+                    : "text-gray-600 hover:text-blue-500"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                  </svg>
+                  Pendentes
+                </div>
+              </button>
+              <button
+                onClick={() => setExerciseTab("completed")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  exerciseTab === "completed"
+                    ? "bg-white text-green-600 shadow-sm"
+                    : "text-gray-600 hover:text-green-500"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  Concluídos
+                </div>
+              </button>
+              <button
+                onClick={() => setExerciseTab("waiting")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  exerciseTab === "waiting"
+                    ? "bg-white text-yellow-600 shadow-sm"
+                    : "text-gray-600 hover:text-yellow-500"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                  </svg>
+                  Aguardando Avaliação
+                </div>
+              </button>
+            </div>
           </div>
 
           {exercises.length === 0 ? (
-            <p className="text-gray-500">Nenhum exercício encontrado para este paciente.</p>
+            <div className="text-center py-12 bg-gray-50 rounded-lg">
+              <p className="text-gray-500">Nenhum exercício encontrado para este paciente.</p>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
               {exercises
                 .filter(exercise => {
                   switch(exerciseTab) {
@@ -317,38 +467,57 @@ function PatientDetailsPage() {
                   }
                 })
                 .map((exercise) => (
-                <div key={exercise._id} className="bg-gray-100 rounded-lg p-4 shadow hover:shadow-md transition">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-bold text-lg mb-2">{exercise.exerciseId?.title || "Exercício sem título"}</h3>
-                      <p className="text-gray-600">Status: {exercise.status}</p>
-                      {exercise.startDate && (
-                        <p className="text-gray-500 text-sm">Início: {new Date(exercise.startDate).toLocaleDateString()}</p>
-                      )}
-                      {exercise.endDate && (
-                        <p className="text-gray-500 text-sm">Fim: {new Date(exercise.endDate).toLocaleDateString()}</p>
+                <div key={exercise._id} className="bg-white rounded-lg border border-gray-200 hover:border-blue-200 transition-all duration-200">
+                  <div className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3">
+                          <h3 className="font-medium text-gray-900">{exercise.exerciseId?.title || "Exercício sem título"}</h3>
+                          <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            exercise.status === "pending" ? "bg-yellow-100 text-yellow-800" :
+                            exercise.status === "completed" ? "bg-green-100 text-green-800" :
+                            "bg-blue-100 text-blue-800"
+                          }`}>
+                            {exercise.status}
+                          </span>
+                        </div>
+                        <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
+                          {exercise.startDate && (
+                            <div className="flex items-center gap-1">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                              </svg>
+                              Início: {new Date(exercise.startDate).toLocaleDateString()}
+                            </div>
+                          )}
+                          {exercise.endDate && (
+                            <div className="flex items-center gap-1">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                              </svg>
+                              Fim: {new Date(exercise.endDate).toLocaleDateString()}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      {exercise.status === "pending" && (
+                        <Button 
+                          variant="danger" 
+                          icon={Trash2} 
+                          onClick={() => handleDeleteClick(exercise)}
+                          className="ml-4"
+                        />
                       )}
                     </div>
-                    {exercise.status === "pending" && (
-                      <Button 
-                        variant="danger" 
-                        icon={Trash2} 
-                        onClick={() => handleDeleteClick(exercise)}
-                        className="ml-2"
-                      />
-                    )}
                   </div>
                 </div>
               ))}
             </div>
           )}
-          <Button onClick={handleOpenModal} variant="primary">
-            + Atribuir Novo Exercício
-          </Button>
         </div>
       ) : (
-        <div className="space-y-4 bg-white shadow-md p-6 rounded-xl">
-          <div className="flex justify-between items-center mb-4">
+        <div className="space-y-6 bg-white shadow-md p-8 rounded-xl">
+          <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-700">Documentos do Paciente</h2>
             <Button onClick={() => setIsDocumentModalOpen(true)} variant="primary">
               + Adicionar Novo Documento
@@ -356,37 +525,78 @@ function PatientDetailsPage() {
           </div>
 
           {/* Abas dos documentos */}
-          <div className="flex gap-4 mb-6">
-            <Button 
-              variant={documentTab === "anamnese" ? "primary" : "outline"} 
-              onClick={() => setDocumentTab("anamnese")}
-            >
-              Anamnese
-            </Button>
-            <Button 
-              variant={documentTab === "evolucao" ? "primary" : "outline"} 
-              onClick={() => setDocumentTab("evolucao")}
-            >
-              Evolução
-            </Button>
+          <div className="mb-6">
+            <div className="bg-gray-50 rounded-xl p-1.5 inline-flex">
+              <button
+                onClick={() => setDocumentTab("anamnese")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  documentTab === "anamnese"
+                    ? "bg-white text-blue-600 shadow-sm"
+                    : "text-gray-600 hover:text-blue-500"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                  </svg>
+                  Anamnese
+                </div>
+              </button>
+              <button
+                onClick={() => setDocumentTab("evolucao")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  documentTab === "evolucao"
+                    ? "bg-white text-blue-600 shadow-sm"
+                    : "text-gray-600 hover:text-blue-500"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+                  </svg>
+                  Evolução
+                </div>
+              </button>
+            </div>
           </div>
           
           {documents.length === 0 ? (
-            <p className="text-gray-500">Nenhum documento encontrado para este paciente.</p>
+            <div className="text-center py-12 bg-gray-50 rounded-lg">
+              <p className="text-gray-500">Nenhum documento encontrado para este paciente.</p>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 gap-4">
+            <div className="space-y-4">
               {documents
                 .filter(document => document.type === documentTab)
                 .map((document) => (
-                <div key={document._id} className="bg-gray-100 rounded-lg p-4 shadow hover:shadow-md transition">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-bold text-lg mb-2">Relatório</h3>
-                      <p className="text-gray-600">{document.report}</p>
-                      <p className="text-gray-500 text-sm mt-2">Observação: {document.observation}</p>
-                      <p className="text-gray-500 text-sm mt-2">
-                        Data: {new Date(document.createdAt).toLocaleDateString()}
-                      </p>
+                <div key={document._id} className="bg-white rounded-lg border border-gray-200 hover:border-blue-200 transition-all duration-200">
+                  <div className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-3">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                          </svg>
+                          <h3 className="font-medium text-gray-900">
+                            {document.type === "anamnese"
+                              ? "Anamnese"
+                              : document.type === "evolucao"
+                              ? "Evolução"
+                              : "Relatório"}
+                          </h3>
+
+                          <span className="text-xs text-gray-500">
+                            {new Date(document.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <div className="pl-7 space-y-3">
+                          <p className="text-gray-600 whitespace-pre-wrap">{document.report}</p>
+                          <div className="border-t pt-3">
+                            <p className="text-sm font-medium text-gray-700 mb-1">Observação:</p>
+                            <p className="text-gray-600">{document.observation}</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -540,11 +750,18 @@ function PatientDetailsPage() {
         </div>
       )}
 
+      {/* Chat Component */}
+      {!loading && patient && (
+        <ChatComponent 
+          patientId={id} 
+          patientNotes={patient.notes || ''} 
+        />
+      )}
     </MainLayout>
   );
 }
 
-function InputField({ label, name, value, onChange, type = "text" }) {
+function InputField({ label, name, value, onChange, type = "text", className = "" }) {
   return (
     <div>
       <label className="block font-medium text-gray-700 mb-1">{label}</label>
@@ -553,7 +770,7 @@ function InputField({ label, name, value, onChange, type = "text" }) {
         name={name}
         value={value}
         onChange={onChange}
-        className="w-full border border-gray-300 rounded-lg p-2"
+        className={`w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
       />
     </div>
   );

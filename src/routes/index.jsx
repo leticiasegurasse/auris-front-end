@@ -4,6 +4,7 @@ import { ROUTES } from '../config/routes';
 import LoginPage from '../pages/AuthPage/LoginPage';
 import RegisterPage from '../pages/AuthPage/RegisterPage';
 import HomePage from '../pages/HomePage/HomePage';
+import ProfilePage from '../pages/ProfilePage/ProfilePage';
 
 import PatientsPage from '../pages/PatientPage/PatientsPage';
 import PatientDetailsPage from '../pages/PatientPage/PatientDetailsPage';
@@ -45,7 +46,7 @@ const AppRouter = () => (
         }
       />
 
-      {/* Rotas protegidas */}
+      {/* Rotas privadas */}
       <Route
         path={ROUTES.HOME}
         element={
@@ -54,15 +55,16 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
+
       <Route
-        path={ROUTES.DASHBOARD}
+        path={ROUTES.PROFILE}
         element={
           <PrivateRoute>
-            <HomePage />
+            <ProfilePage />
           </PrivateRoute>
         }
       />
-      {/* ROTA PACIENTES */}
+
       <Route
         path={ROUTES.PATIENTS}
         element={
@@ -71,6 +73,7 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
+
       <Route
         path={ROUTES.PATIENT}
         element={
@@ -79,6 +82,7 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
+
       <Route
         path={ROUTES.NEW_PATIENT}
         element={
@@ -87,16 +91,7 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
-      {/* ROTA EVOLUÇÃO */}
-      <Route
-        path={ROUTES.EVOLUTION}
-        element={
-          <PrivateRoute>
-            <EvolutionPage />
-          </PrivateRoute>
-        }
-      />
-      {/* ROTA CATEGORIAS */}
+
       <Route
         path={ROUTES.CATEGORIES}
         element={
@@ -105,15 +100,16 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
+
       <Route
-        path={ROUTES.NEW_CATEGORY}
+        path={ROUTES.CREATE_CATEGORY}
         element={
           <PrivateRoute>
             <CreateCategoryPage />
           </PrivateRoute>
         }
       />
-      {/* ROTA EXERCICIOS */}
+
       <Route
         path={ROUTES.EXERCISES_BY_CATEGORY}
         element={
@@ -122,6 +118,7 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
+
       <Route
         path={ROUTES.NEW_EXERCISE}
         element={
@@ -130,6 +127,7 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
+
       <Route
         path={ROUTES.EXERCISE_DETAILS}
         element={
@@ -138,12 +136,21 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
-      {/* ROTA AGENDA */}
+
       <Route
         path={ROUTES.CALENDAR}
         element={
           <PrivateRoute>
             <CalendarPage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path={ROUTES.EVOLUTION}
+        element={
+          <PrivateRoute>
+            <EvolutionPage />
           </PrivateRoute>
         }
       />

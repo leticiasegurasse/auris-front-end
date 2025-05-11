@@ -12,7 +12,7 @@ function SubLayout ({ children }) {
 
     return (
         <>
-            <div className="w-full min-h-screen p-4 flex flex-col items-center justify-center bg">
+            <div className="w-full min-h-screen p-4 min-h-screen flex items-center justify-center bg-[var(--secondary-color)]">
                 {children}
             </div>
             {/* <img

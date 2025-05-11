@@ -33,12 +33,11 @@ function CategoriesPage() {
 
   return (
     <MainLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4 sm:mb-0">Categorias de Exercícios</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-4 sm:mb-0">Categorias de Exercícios</h1>
           <Button 
             onClick={handleCreateCategory}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
           >
             <PlusCircle size={20} />
             Nova Categoria
