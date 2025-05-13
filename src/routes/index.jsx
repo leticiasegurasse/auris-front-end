@@ -102,7 +102,7 @@ const AppRouter = () => (
       />
 
       <Route
-        path={ROUTES.CREATE_CATEGORY}
+        path={ROUTES.NEW_CATEGORY}
         element={
           <PrivateRoute>
             <CreateCategoryPage />
