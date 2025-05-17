@@ -6,6 +6,8 @@ import { ArrowBigLeftDash, Trash2 } from "lucide-react";
 import { getPatientById, updatePatientById } from "../../api/patients/patient";
 import { getPatientExercisesByPatientId, createPatientExercise, deletePatientExercise } from "../../api/patients/patientExercises";
 import { getPatientDocuments, createPatientDocument, updatePatientDocument } from "../../api/patients/patientDocuments";
+import { getPatientResponsesByPatientExerciseId } from "../../api/patients/patientResponses";
+import { createTherapistEvaluation, getTherapistEvaluationByPatientResponseId } from "../../api/therapist/therapistEvaluation";
 import { updateUserById } from "../../api/users/user";
 import { getAllCategories } from "../../api/categories/categories";
 import { getExercisesByCategory } from "../../api/exercises/exercise";
@@ -25,7 +27,11 @@ function PatientDetailsPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isResponseModalOpen, setIsResponseModalOpen] = useState(false);
+  const [isCompletedModalOpen, setIsCompletedModalOpen] = useState(false);
   const [exerciseToDelete, setExerciseToDelete] = useState(null);
+  const [selectedExercise, setSelectedExercise] = useState(null);
+  const [exerciseResponse, setExerciseResponse] = useState(null);
   const [categories, setCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [availableExercises, setAvailableExercises] = useState([]);
@@ -38,7 +44,7 @@ function PatientDetailsPage() {
   const [newDocument, setNewDocument] = useState({
     report: '',
     observation: '',
-    type: 'anamnese' // 👈 tipo padrão do documento
+    type: 'anamnese' // tipo padrão do documento
   });
 
   const [formData, setFormData] = useState({
@@ -49,6 +55,18 @@ function PatientDetailsPage() {
     status: "",
     city: "",
     notes: "",
+  });
+
+  const [therapistEvaluation, setTherapistEvaluation] = useState({
+    therapistComment: '',
+    therapistFeedback: '',
+    score: 0
+  });
+
+  const [completedExerciseData, setCompletedExerciseData] = useState({
+    exercise: null,
+    response: null,
+    evaluation: null
   });
 
   useEffect(() => {
@@ -68,7 +86,7 @@ function PatientDetailsPage() {
 
         const exercisesData = await getPatientExercisesByPatientId(id);
         setExercises(exercisesData);
-
+        
         const documentsData = await getPatientDocuments(id);
         setDocuments(documentsData);
       } catch (error) {
@@ -173,7 +191,6 @@ function PatientDetailsPage() {
   }
  
   
-
   const handleDeleteExercise = async (exerciseId) => {
     try {
       await deletePatientExercise(exerciseId);
@@ -191,6 +208,83 @@ function PatientDetailsPage() {
   const handleDeleteClick = (exercise) => {
     setExerciseToDelete(exercise);
     setIsDeleteModalOpen(true);
+  };
+
+  const handleViewResponse = async (exercise) => {
+    console.log('exercicio', exercise);
+    try {
+      setSelectedExercise(exercise);
+      const response = await getPatientResponsesByPatientExerciseId(exercise._id);
+      console.log('resposta', response);
+      setExerciseResponse(response[0]); // Pegando a primeira resposta
+      setIsResponseModalOpen(true);
+    } catch (error) {
+      console.error("Erro ao buscar resposta do exercício:", error);
+      setAlert({ type: "error", message: "Erro ao buscar resposta do exercício." });
+    }
+  };
+
+  const handleViewCompletedExercise = async (exercise) => {
+    try {
+      const response = await getPatientResponsesByPatientExerciseId(exercise._id);
+      const patientResponse = response[0];
+      
+      if (patientResponse) {
+        const evaluation = await getTherapistEvaluationByPatientResponseId(patientResponse._id);
+        setCompletedExerciseData({
+          exercise,
+          response: patientResponse,
+          evaluation: evaluation
+        });
+        setIsCompletedModalOpen(true);
+        console.log('completedExerciseData', completedExerciseData);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados do exercício:", error);
+      setAlert({ type: "error", message: "Erro ao buscar dados do exercício." });
+    }
+  };
+
+  const handleEvaluationChange = (e) => {
+    const { name, value } = e.target;
+    setTherapistEvaluation(prev => ({
+      ...prev,
+      [name]: name === 'score' ? parseInt(value) : value
+    }));
+  };
+
+  const handleSaveEvaluation = async () => {
+    try {
+      if (!exerciseResponse) {
+        setAlert({ type: "warning", message: "Nenhuma resposta encontrada para avaliar." });
+        return;
+      }
+
+      const evaluationData = {
+        patientResponseId: exerciseResponse._id,
+        therapistComment: therapistEvaluation.therapistComment,
+        therapistFeedback: therapistEvaluation.therapistFeedback,
+        score: therapistEvaluation.score,
+        createdAt: new Date().toISOString()
+      };
+
+      await createTherapistEvaluation(evaluationData);
+      
+      // Atualizar a lista de exercícios
+      const updatedExercises = await getPatientExercisesByPatientId(id);
+      setExercises(updatedExercises);
+
+      setAlert({ type: "success", message: "Avaliação salva com sucesso!" });
+      setIsResponseModalOpen(false);
+      setTherapistEvaluation({
+        therapistComment: '',
+        therapistFeedback: '',
+        score: 0
+      });
+    } catch (error) {
+      console.error("Erro ao salvar avaliação:", error);
+      setAlert({ type: "error", message: "Erro ao salvar avaliação." });
+    }
   };
 
   const handleSaveNewDocument = async () => {
@@ -500,14 +594,32 @@ function PatientDetailsPage() {
                           )}
                         </div>
                       </div>
-                      {exercise.status === "pending" && (
-                        <Button 
-                          variant="danger" 
-                          icon={Trash2} 
-                          onClick={() => handleDeleteClick(exercise)}
-                          className="ml-4"
-                        />
-                      )}
+                      <div className="flex items-center gap-4">
+                        {exercise.status === "pending" && (
+                          <Button 
+                            variant="danger" 
+                            icon={Trash2} 
+                            onClick={() => handleDeleteClick(exercise)}
+                            className="ml-4"
+                          />
+                        )}
+                        {exercise.status === "waiting" && (
+                          <Button 
+                            variant="primary" 
+                            onClick={() => handleViewResponse(exercise)}
+                          >
+                            Ver Resposta
+                          </Button>
+                        )}
+                        {exercise.status === "completed" && (
+                          <Button 
+                            variant="primary" 
+                            onClick={() => handleViewCompletedExercise(exercise)}
+                          >
+                            Ver Detalhes
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -745,6 +857,239 @@ function PatientDetailsPage() {
             <div className="flex justify-end gap-4">
               <Button variant="outline" onClick={() => setIsDocumentModalOpen(false)}>Cancelar</Button>
               <Button onClick={handleSaveNewDocument}>Salvar</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Resposta do Exercício */}
+      {isResponseModalOpen && exerciseResponse && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-6xl relative">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Avaliação de Exercício</h2>
+              <button
+                onClick={() => setIsResponseModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Resposta do Paciente */}
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Resposta do Paciente</h3>
+                
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Exercício</h4>
+                    <p className="text-gray-800 font-medium">{selectedExercise?.exerciseId?.title}</p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Comentário</h4>
+                    <p className="text-gray-800 bg-white rounded-lg p-3 border border-gray-200">
+                      {exerciseResponse.patientComment}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Data da Resposta</h4>
+                    <p className="text-gray-800">
+                      {new Date(exerciseResponse.responseDate).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  {exerciseResponse.audioUrl && (
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-600 mb-2">Áudio da Resposta</h4>
+                      <div className="bg-white rounded-lg p-3 border border-gray-200">
+                        <audio controls className="w-full">
+                          <source src={exerciseResponse.audioUrl} type="audio/mpeg" />
+                          Seu navegador não suporta o elemento de áudio.
+                        </audio>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Avaliação do Terapeuta */}
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Avaliação do Terapeuta</h3>
+                
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Comentário
+                    </label>
+                    <textarea
+                      name="therapistComment"
+                      value={therapistEvaluation.therapistComment}
+                      onChange={handleEvaluationChange}
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      rows="4"
+                      placeholder="Digite seu comentário sobre a resposta do paciente..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Feedback para o Paciente
+                    </label>
+                    <textarea
+                      name="therapistFeedback"
+                      value={therapistEvaluation.therapistFeedback}
+                      onChange={handleEvaluationChange}
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      rows="4"
+                      placeholder="Digite o feedback para o paciente..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Nota (0-10)
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="range"
+                        name="score"
+                        value={therapistEvaluation.score}
+                        onChange={handleEvaluationChange}
+                        min="0"
+                        max="10"
+                        step="1"
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                      <span className="text-lg font-medium text-gray-800 min-w-[2rem] text-center">
+                        {therapistEvaluation.score}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-4 mt-8">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setIsResponseModalOpen(false)}
+                    className="px-6"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    onClick={handleSaveEvaluation}
+                    className="px-6"
+                  >
+                    Salvar Avaliação
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Exercício Completo */}
+      {isCompletedModalOpen && completedExerciseData.exercise && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-6xl relative">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Detalhes do Exercício</h2>
+              <button
+                onClick={() => setIsCompletedModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Resposta do Paciente */}
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Resposta do Paciente</h3>
+                
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Exercício</h4>
+                    <p className="text-gray-800 font-medium">{completedExerciseData.exercise?.exerciseId?.title}</p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Comentário</h4>
+                    <p className="text-gray-800 bg-white rounded-lg p-3 border border-gray-200">
+                      {completedExerciseData.response?.patientComment}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Data da Resposta</h4>
+                    <p className="text-gray-800">
+                      {new Date(completedExerciseData.response?.responseDate).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  {completedExerciseData.response?.audioUrl && (
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-600 mb-2">Áudio da Resposta</h4>
+                      <div className="bg-white rounded-lg p-3 border border-gray-200">
+                        <audio controls className="w-full">
+                          <source src={completedExerciseData.response.audioUrl} type="audio/mpeg" />
+                          Seu navegador não suporta o elemento de áudio.
+                        </audio>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Avaliação do Terapeuta */}
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Avaliação do Terapeuta</h3>
+                
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Comentário</h4>
+                    <p className="text-gray-800 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                      {completedExerciseData.evaluation?.therapistComment}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Feedback</h4>
+                    <p className="text-gray-800 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                      {completedExerciseData.evaluation?.therapistFeedback}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Nota</h4>
+                    <div className="flex items-center gap-2">
+                      <div className="w-full bg-gray-200 rounded-full h-2.5">
+                        <div 
+                          className="bg-blue-600 h-2.5 rounded-full" 
+                          style={{ width: `${(completedExerciseData.evaluation?.score / 10) * 100}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-lg font-medium text-gray-800 min-w-[2rem] text-center">
+                        {completedExerciseData.evaluation?.score}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Data da Avaliação</h4>
+                    <p className="text-gray-800">
+                      {new Date(completedExerciseData.evaluation?.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

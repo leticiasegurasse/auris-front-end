@@ -4,7 +4,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import { useEffect, useState } from "react";
 import { getAllPatients } from "../../api/patients/patient";
-import { getAppointments } from "../../api/calendar/calendar";
+import { getAppointments, getAppointmentsFuture } from "../../api/calendar/calendar";
 import { getRecentLogs } from "../../api/logs/logs";
 import { Users, Calendar, ClipboardList, Activity, Clock } from "lucide-react";
 import ConsultationAlerts from "../../components/AlertsComponent/ConsultationAlerts";
@@ -44,7 +44,7 @@ function HomePage() {
 
   const loadAppointments = async () => {
     try {
-      const appointments = await getAppointments();
+      const appointments = await getAppointmentsFuture();
       console.log("Appointments:", appointments);
 
       setTotalAppointments(appointments.length);

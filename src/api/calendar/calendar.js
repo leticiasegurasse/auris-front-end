@@ -11,6 +11,11 @@ export async function getAppointments() {
   return response.data;
 }
 
+export async function getAppointmentsFuture() {
+  const response = await api.get("/agenda/future");
+  return response.data;
+}
+
 export async function getAppointmentById(id) {
   const response = await api.get(`/agenda/${id}`);
   return response.data;
@@ -23,6 +28,7 @@ export async function updateAppointment(id, appointmentData) {
 
 export async function deleteAppointment(id) {
   const response = await api.delete(`/agenda/${id}`);
+  console.log('response', response);
   return response.data;
 }
 
