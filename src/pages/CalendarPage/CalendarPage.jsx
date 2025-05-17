@@ -107,7 +107,10 @@ function CalendarPage() {
 
   const handleEventClick = (arg) => {
     const startDate = new Date(arg.event.start);
-    setSelectedAppointment(arg.event.extendedProps);
+    setSelectedAppointment({
+      ...arg.event.extendedProps,
+      _id: arg.event.id
+    });
     setFormData({
       patient: arg.event.extendedProps.patient._id,
       consultationDateTime: startDate.toISOString().slice(0, -8),
@@ -151,7 +154,10 @@ function CalendarPage() {
   };
 
   const handleDelete = async () => {
-    if (!selectedAppointment) return;
+    if (!selectedAppointment?._id) {
+      setAlert({ type: "error", message: "ID da consulta não encontrado" });
+      return;
+    }
     
     try {
       await deleteAppointment(selectedAppointment._id);
@@ -161,6 +167,29 @@ function CalendarPage() {
     } catch (error) {
       console.error("Erro ao excluir consulta:", error);
       setAlert({ type: "error", message: "Erro ao excluir consulta: " + error });
+    }
+  };
+
+  const handleEventDrop = async (info) => {
+    try {
+      const eventId = info.event.id;
+      const newStartDate = info.event.start;
+      const newEndDate = info.event.end || new Date(newStartDate.getTime() + 60 * 60 * 1000);
+
+      const appointmentData = {
+        consultationDateTime: newStartDate.toISOString(),
+        patient: info.event.extendedProps.patient._id,
+        observations: info.event.extendedProps.observations || "",
+        therapist: user?.id
+      };
+
+      await updateAppointment(eventId, appointmentData);
+      setAlert({ type: "success", message: "Consulta atualizada com sucesso!" });
+      loadAppointments();
+    } catch (error) {
+      console.error("Erro ao atualizar consulta:", error);
+      setAlert({ type: "error", message: "Erro ao atualizar consulta: " + error });
+      info.revert(); // Reverte o evento para a posição original em caso de erro
     }
   };
 
@@ -210,6 +239,7 @@ function CalendarPage() {
                 height="auto"
                 dateClick={handleDateClick}
                 eventClick={handleEventClick}
+                eventDrop={handleEventDrop}
                 events={events}
                 eventTimeFormat={{
                   hour: "2-digit",
