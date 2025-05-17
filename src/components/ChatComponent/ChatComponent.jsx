@@ -107,11 +107,11 @@ const ChatComponent = ({ patientId, patientNotes }) => {
       ) : (
         <div className="bg-white rounded-lg shadow-xl w-96 h-[600px] flex flex-col">
           {/* Header */}
-          <div className="p-4 border-b flex justify-between items-center">
-            <h3 className="font-semibold text-gray-700">Chat com IA</h3>
+          <div className="p-4 bg-[var(--primary-color)] border-b flex justify-between items-center">
+            <h3 className="font-semibold text-white">Chat com IA</h3>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-white hover:text-[var(--light-blue)]"
             >
               <X size={20} />
             </button>

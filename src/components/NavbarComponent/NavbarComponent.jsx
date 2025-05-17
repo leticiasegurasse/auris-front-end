@@ -88,8 +88,7 @@ function NavbarComponent() {
         <nav className="w-10/12 py-7 space-y-4 border-t border-gray-100">
           <ul className="space-y-4">
             {[
-              { name: "Home", icon: Home, path: ROUTES.HOME },
-              { name: "Dashboard", icon: LayoutDashboard, path: ROUTES.DASHBOARD },
+              { name: "Dashboard", icon: LayoutDashboard, path: ROUTES.HOME },
               { name: "Pacientes", icon: UserRound, path: ROUTES.PATIENTS },
               { name: "Documentos", icon: Activity, path: ROUTES.EVOLUTION },
               { name: "Exercícios", icon: ClipboardPlus, path: ROUTES.CATEGORIES },
