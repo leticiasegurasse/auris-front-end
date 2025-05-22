@@ -1,17 +1,17 @@
 import { useForm } from "../../hooks/useForm";
-import { Mail, Lock, ArrowRight } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import AuthTabs from "../../components/ButtonComponent/AuthTabs";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import { loginRequest } from "../../api/auth";
 import { useAuth } from "../../hooks/useAuth"; 
 import SubLayout from "../../layouts/SubLayout";
-
-
+import { useState } from "react";
 
 function LoginPage() {
   const { goTo } = useCustomNavigate();
   const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { values, errors, handleChange, validateForm } = useForm(
     { email: "", password: "" },
@@ -22,6 +22,7 @@ function LoginPage() {
     e.preventDefault();
   
     if (validateForm()) {
+      setIsLoading(true);
       try {
         const res = await loginRequest(values.email, values.password);
   
@@ -33,8 +34,19 @@ function LoginPage() {
         login(res.data);
         goTo("HOME");
       } catch (err) {
-        alert("Falha no login. Verifique suas credenciais.");
+        const message = err?.response?.data?.message;
+        const paymentLink = err?.response?.data?.paymentLink;
+      
+        if (paymentLink) {
+          alert(message || "Sua assinatura não está ativa. Redirecionando para o pagamento...");
+          window.location.href = paymentLink;
+          return;
+        }
+      
+        alert(message || "Falha no login. Verifique suas credenciais.");
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     }
   }  
@@ -95,8 +107,16 @@ function LoginPage() {
             <Button
               type="submit"
               size="full"
+              disabled={isLoading}
             >
-              Entrar
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>Carregando...</span>
+                </div>
+              ) : (
+                "Entrar"
+              )}
             </Button>
           </form>
         </div>

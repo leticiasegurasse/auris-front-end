@@ -6,7 +6,7 @@ export const loginRequest = (email, password) => {
 
 export const registerRequest = (data) => {
     return api.post('/auth/register', data);
-  };
+};
 
 export const verifyToken = async () => {
   try {
