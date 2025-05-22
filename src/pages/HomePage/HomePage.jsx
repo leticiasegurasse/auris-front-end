@@ -179,7 +179,7 @@ function HomePage() {
                 </Button>
               </div>
               
-              <div className="max-h-[250px] overflow-y-auto pr-2">
+              <div className="">
                 {loading ? (
                   <p>Carregando...</p>
                 ) : (
