@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FileText, Plus, Search, Filter, X, User, Calendar, Clock, ChevronRight, ChevronLeft } from 'lucide-react';
 import { ROUTES } from '../../config/routes';
 import MainLayout from '../../layouts/MainLayout';
-import { getAllPatientDocuments } from '../../api/patients/patientDocuments';
+import { getAllPatientDocuments, getDocumentsStats } from '../../api/patients/patientDocuments';
 import { getAllPatients } from '../../api/patients/patient';
 import AlertMessage from '../../components/AlertComponent/AlertMessage';
 import { createPatientDocument } from '../../api/patients/patientDocuments';
@@ -26,16 +26,23 @@ function EvolutionPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [limit] = useState(5);
+  const [stats, setStats] = useState({
+    total: 0,
+    byType: {
+      anamnese: 0,
+      evolucao: 0
+    }
+  });
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [documentsResponse, patientsResponse] = await Promise.all([
+        const [documentsResponse, patientsResponse, statsResponse] = await Promise.all([
           getAllPatientDocuments(currentPage, limit),
-          getAllPatients()
+          getAllPatients(),
+          getDocumentsStats()
         ]);
         
-        // Verifica se documentsResponse existe e tem a estrutura esperada
         if (documentsResponse && documentsResponse.reports) {
           setDocuments(documentsResponse.reports);
           if (documentsResponse.pagination) {
@@ -50,6 +57,10 @@ function EvolutionPage() {
           setPatients(patientsResponse.data);
         } else {
           setPatients([]);
+        }
+
+        if (statsResponse) {
+          setStats(statsResponse);
         }
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
@@ -153,7 +164,7 @@ function EvolutionPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-600 text-sm">Total de Documentos</p>
-                  <p className="text-3xl font-bold text-indigo-600 mt-1">{documents.length}</p>
+                  <p className="text-3xl font-bold text-indigo-600 mt-1">{stats.total}</p>
                 </div>
                 <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
                   <FileText className="text-indigo-600" size={24} />
@@ -165,7 +176,7 @@ function EvolutionPage() {
                 <div>
                   <p className="text-gray-600 text-sm">Total de Evoluções</p>
                   <p className="text-3xl font-bold text-purple-600 mt-1">
-                    {documents.filter(doc => doc.type === 'evolucao').length}
+                    {stats.byType.evolucao}
                   </p>
                 </div>
                 <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
@@ -178,7 +189,7 @@ function EvolutionPage() {
                 <div>
                   <p className="text-gray-600 text-sm">Total de Anamneses</p>
                   <p className="text-3xl font-bold text-pink-600 mt-1">
-                    {documents.filter(doc => doc.type === 'anamnese').length}
+                    {stats.byType.anamnese}
                   </p>
                 </div>
                 <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">

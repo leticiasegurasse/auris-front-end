@@ -38,4 +38,9 @@ export const createPatientDocument = async (data) => {
       }
     });
     return response.data;
+  };
+
+  export const getDocumentsStats = async () => {
+    const response = await api.get('/patient-reports/stats');
+    return response.data;
   }; 
