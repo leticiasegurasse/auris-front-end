@@ -109,14 +109,18 @@ function ExercisesByCategoryPage() {
     try {
       await deleteCategoryById(categoryId);
       setAlert({ type: "success", message: "Categoria excluída com sucesso!" });
-      setIsDeleteModalOpen(false);
       setIsEditModalOpen(false);
       setTimeout(() => {
         goTo("CATEGORIES");
       }, 1000);
     } catch (error) {
       console.error("Erro ao excluir categoria:", error);
-      setAlert({ type: "error", message: "Erro ao excluir categoria: " + error });
+      setAlert({ 
+        type: "error", 
+        message: error.response?.data?.message || "Erro ao excluir categoria" 
+      });
+    } finally {
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -360,7 +364,7 @@ function ExercisesByCategoryPage() {
               Tem certeza que deseja excluir a categoria "{category?.title}"? 
               Esta ação não pode ser desfeita.
             </p>
-            <div className="flex justify-end gap-4">
+            <div className="flex justify-center gap-4">
               <Button 
                 onClick={() => setIsDeleteModalOpen(false)}
                 className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-lg transition-all duration-300"
