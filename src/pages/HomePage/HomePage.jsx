@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { getAllPatients } from "../../api/patients/patient";
 import { getAppointments, getAppointmentsFuture } from "../../api/calendar/calendar";
 import { getRecentLogs } from "../../api/logs/logs";
+import { getDocumentsStats } from "../../api/patients/patientDocuments";
 import { Users, Calendar, ClipboardList, Activity, Clock } from "lucide-react";
 import ConsultationAlerts from "../../components/AlertsComponent/ConsultationAlerts";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
@@ -19,18 +20,27 @@ function HomePage() {
   const [events, setEvents] = useState([]);
   const [alert, setAlert] = useState(null);
   const [recentLogs, setRecentLogs] = useState([]);
+  const [documentsStats, setDocumentsStats] = useState({
+    total: 0,
+    byType: {
+      anamnese: 0,
+      evolucao: 0
+    }
+  });
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [patientsResponse] = await Promise.all([
-          getAllPatients()
+        const [patientsResponse, statsResponse] = await Promise.all([
+          getAllPatients(),
+          getDocumentsStats()
         ]);
 
         loadAppointments();
         loadRecentLogs();
         
         setPatientsCount(patientsResponse.data.length);
+        setDocumentsStats(statsResponse);
         
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
@@ -139,7 +149,7 @@ function HomePage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500">Documentos</p>
-                <h3 className="text-3xl font-bold">5</h3>
+                <h3 className="text-3xl font-bold">{documentsStats.total}</h3>
               </div>
               <div className="bg-orange-100 p-3 rounded-full">
                 <ClipboardList className="w-6 h-6 text-orange-600" />

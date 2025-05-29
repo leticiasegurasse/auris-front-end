@@ -4,11 +4,15 @@ export const registerPatientRequest = (data) => {
   return api.post("/auth/register", data);
 };
 
-export const getAllPatients = async () => {
+export const getAllPatients = async (page = 1, limit = 5) => {
     try {
-        const response = await api.get("/patients");
-        console.log('Resposta da API em getAllPatients:', response);
-        return response;
+        const response = await api.get("/patients", {
+            params: {
+                page,
+                limit
+            }
+        });
+        return response.data;
     } catch (error) {
         console.error('Erro ao buscar pacientes:', error);
         throw error;
