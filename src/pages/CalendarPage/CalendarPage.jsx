@@ -43,15 +43,16 @@ function CalendarPage() {
   const loadPatients = async () => {
     try {
       const response = await getAllPatients();
-      setPatients(response.data);
+      setPatients(response.data || []);
     } catch (error) {
       console.error("Erro ao carregar pacientes:", error);
       setAlert({ type: "error", message: "Erro ao carregar pacientes: " + error });
+      setPatients([]); // Garante que patients seja um array vazio em caso de erro
     }
   };
 
-  const filteredPatients = patients.filter(patient => 
-    patient.userId?.name_user?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPatients = (patients || []).filter(patient => 
+    patient?.userId?.name_user?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const loadAppointments = async () => {

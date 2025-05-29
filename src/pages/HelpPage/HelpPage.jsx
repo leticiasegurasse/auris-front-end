@@ -132,14 +132,14 @@ function HelpPage() {
               <Phone className="text-blue-600" size={24} />
               <div>
                 <h3 className="font-medium text-gray-800">Telefone</h3>
-                <p className="text-gray-600">(11) 9999-9999</p>
+                <p className="text-gray-600">(32) 9999-9999</p>
               </div>
             </div>
             <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
               <MapPin className="text-blue-600" size={24} />
               <div>
                 <h3 className="font-medium text-gray-800">Endereço</h3>
-                <p className="text-gray-600">São Paulo, SP</p>
+                <p className="text-gray-600">Muriaé, MG</p>
               </div>
             </div>
           </div>
