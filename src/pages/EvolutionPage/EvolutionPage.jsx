@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FileText, Plus, Search, Filter, X, User, Calendar, Clock, ChevronRight, ChevronLeft } from 'lucide-react';
 import { ROUTES } from '../../config/routes';
 import MainLayout from '../../layouts/MainLayout';
-import { getAllPatientDocuments, getDocumentsStats } from '../../api/patients/patientDocuments';
+import { getAllPatientDocuments, getDocumentsStats, getDocumentsByPatientName } from '../../api/patients/patientDocuments';
 import { getAllPatients } from '../../api/patients/patient';
 import AlertMessage from '../../components/AlertComponent/AlertMessage';
 import { createPatientDocument } from '../../api/patients/patientDocuments';
@@ -12,7 +12,6 @@ import Button from '../../components/ButtonComponent/ButtonComponent';
 function EvolutionPage() {
   const [documents, setDocuments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [alert, setAlert] = useState(null);
   const [selectedDocument, setSelectedDocument] = useState(null);
@@ -37,8 +36,9 @@ function EvolutionPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [documentsResponse, patientsResponse, statsResponse] = await Promise.all([
-          getAllPatientDocuments(currentPage, limit),
+        setLoading(true);
+        const documentsResponse = await getAllPatientDocuments(currentPage, limit);
+        const [patientsResponse, statsResponse] = await Promise.all([
           getAllPatients(),
           getDocumentsStats()
         ]);
@@ -75,17 +75,45 @@ function EvolutionPage() {
     fetchData();
   }, [currentPage, limit]);
 
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) {
+      // Se o termo de busca estiver vazio, carrega todos os documentos
+      const documentsResponse = await getAllPatientDocuments(currentPage, limit);
+      if (documentsResponse && documentsResponse.reports) {
+        setDocuments(documentsResponse.reports);
+        if (documentsResponse.pagination) {
+          setTotalPages(documentsResponse.pagination.totalPages);
+        }
+      }
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const documentsResponse = await getDocumentsByPatientName(searchTerm, currentPage, limit);
+      
+      if (documentsResponse && documentsResponse.reports) {
+        setDocuments(documentsResponse.reports);
+        if (documentsResponse.pagination) {
+          setTotalPages(documentsResponse.pagination.totalPages);
+        }
+      } else {
+        setDocuments([]);
+        setTotalPages(1);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar documentos:', error);
+      setAlert({ type: 'error', message: 'Erro ao buscar documentos' });
+      setDocuments([]);
+      setTotalPages(1);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-
-  const filteredDocuments = documents?.filter(doc => {
-    if (!doc) return false;
-    const matchesSearch = doc.report?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doc.patientId?.userId?.name_user?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filter === 'all' || doc.type === filter;
-    return matchesSearch && matchesFilter;
-  }) || [];
 
   const handleDocumentClick = (doc) => {
     setSelectedDocument(doc);
@@ -199,31 +227,31 @@ function EvolutionPage() {
             </div>
           </div>
 
-          {/* Search and Filter Section */}
+          {/* Search Section */}
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
                   type="text"
-                  placeholder="Buscar documentos..."
+                  placeholder="Buscar por nome do paciente..."
                   className="w-full pl-12 pr-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch();
+                    }
+                  }}
                 />
               </div>
-              <div className="flex items-center gap-2 bg-white/50 p-3 rounded-xl border border-gray-200">
-                <Filter size={20} className="text-gray-600" />
-                <select
-                  className="bg-transparent border-none focus:outline-none focus:ring-0 text-gray-600"
-                  value={filter}
-                  onChange={(e) => setFilter(e.target.value)}
-                >
-                  <option value="all">Todos</option>
-                  <option value="evolução">Evoluções</option>
-                  <option value="avaliação">Avaliações</option>
-                </select>
-              </div>
+              <Button
+                onClick={handleSearch}
+                className="whitespace-nowrap"
+              >
+                <Search size={20} className="mr-2" />
+                Buscar
+              </Button>
             </div>
           </div>
 
@@ -234,15 +262,19 @@ function EvolutionPage() {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto"></div>
                 <p className="mt-4 text-gray-600">Carregando documentos...</p>
               </div>
-            ) : filteredDocuments.length === 0 ? (
+            ) : documents.length === 0 ? (
               <div className="text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
                 <FileText className="mx-auto text-gray-400" size={48} />
-                <p className="mt-4 text-gray-600">Nenhum documento encontrado</p>
+                <p className="mt-4 text-gray-600">
+                  {searchTerm 
+                    ? `Nenhum documento encontrado para "${searchTerm}"`
+                    : 'Nenhum documento encontrado'}
+                </p>
               </div>
             ) : (
               <>
                 <div className="grid gap-4">
-                  {filteredDocuments.map((doc) => (
+                  {documents.map((doc) => (
                     <div
                       key={doc._id}
                       className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20 hover:shadow-xl transition-all duration-300 cursor-pointer"

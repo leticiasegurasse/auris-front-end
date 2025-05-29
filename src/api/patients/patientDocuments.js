@@ -43,4 +43,15 @@ export const createPatientDocument = async (data) => {
   export const getDocumentsStats = async () => {
     const response = await api.get('/patient-reports/stats');
     return response.data;
+  };
+
+  export const getDocumentsByPatientName = async (name, page = 1, limit = 5) => {
+    const response = await api.get('/patient-reports/search', {
+      params: {
+        name,
+        page,
+        limit
+      }
+    });
+    return response.data;
   }; 
