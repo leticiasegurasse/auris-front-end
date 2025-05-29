@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Plus, Search, Filter, X, User, Calendar, Clock, ChevronRight } from 'lucide-react';
+import { FileText, Plus, Search, Filter, X, User, Calendar, Clock, ChevronRight, ChevronLeft } from 'lucide-react';
 import { ROUTES } from '../../config/routes';
 import MainLayout from '../../layouts/MainLayout';
 import { getAllPatientDocuments } from '../../api/patients/patientDocuments';
@@ -23,37 +23,58 @@ function EvolutionPage() {
   const [report, setReport] = useState('');
   const [observation, setObservation] = useState('');
   const [patients, setPatients] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [limit] = useState(5);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const [documentsResponse, patientsResponse] = await Promise.all([
-          getAllPatientDocuments(),
+          getAllPatientDocuments(currentPage, limit),
           getAllPatients()
         ]);
-        setDocuments(documentsResponse);
-        setPatients(patientsResponse.data);
+        
+        // Verifica se documentsResponse existe e tem a estrutura esperada
+        if (documentsResponse && documentsResponse.reports) {
+          setDocuments(documentsResponse.reports);
+          if (documentsResponse.pagination) {
+            setTotalPages(documentsResponse.pagination.totalPages);
+          }
+        } else {
+          setDocuments([]);
+          setTotalPages(1);
+        }
+        
+        if (patientsResponse && patientsResponse.data) {
+          setPatients(patientsResponse.data);
+        } else {
+          setPatients([]);
+        }
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
         setAlert({ type: 'error', message: 'Erro ao carregar dados' });
+        setDocuments([]);
+        setTotalPages(1);
       } finally {
         setLoading(false);
       }
     }
 
     fetchData();
-  }, []);
+  }, [currentPage, limit]);
 
-  useEffect(() => {
-    console.log(patients);
-  }, [patients]);
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
-  const filteredDocuments = documents.filter(doc => {
-    const matchesSearch = doc.report.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doc.patientId?.name_user?.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredDocuments = documents?.filter(doc => {
+    if (!doc) return false;
+    const matchesSearch = doc.report?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         doc.patientId?.userId?.name_user?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filter === 'all' || doc.type === filter;
     return matchesSearch && matchesFilter;
-  });
+  }) || [];
 
   const handleDocumentClick = (doc) => {
     setSelectedDocument(doc);
@@ -208,39 +229,84 @@ function EvolutionPage() {
                 <p className="mt-4 text-gray-600">Nenhum documento encontrado</p>
               </div>
             ) : (
-              <div className="grid gap-4">
-                {filteredDocuments.map((doc) => (
-                  <div
-                    key={doc._id}
-                    className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20 hover:shadow-xl transition-all duration-300 cursor-pointer"
-                    onClick={() => handleDocumentClick(doc)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
-                          <FileText className="text-indigo-600" size={24} />
+              <>
+                <div className="grid gap-4">
+                  {filteredDocuments.map((doc) => (
+                    <div
+                      key={doc._id}
+                      className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20 hover:shadow-xl transition-all duration-300 cursor-pointer"
+                      onClick={() => handleDocumentClick(doc)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
+                            <FileText className="text-indigo-600" size={24} />
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-800 group-hover:text-indigo-600 transition-colors">
+                              {doc.type === 'anamnese' ? 'Anamnese' : doc.type === 'evolucao' ? 'Evolução' : doc.type}
+                            </h3>
+                            <p className="text-sm text-gray-600 flex items-center gap-2">
+                              <User size={16} />
+                              {doc.patientId?.userId?.name_user || 'Paciente não encontrado'}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-medium text-gray-800 group-hover:text-indigo-600 transition-colors">
-                            {doc.type === 'anamnese' ? 'Anamnese' : doc.type === 'evolucao' ? 'Evolução' : doc.type}
-                          </h3>
-                          <p className="text-sm text-gray-600 flex items-center gap-2">
-                            <User size={16} />
-                            {doc.patientId?.userId?.name_user || 'Paciente não encontrado'}
-                          </p>
+                        <div className="flex items-center gap-4">
+                          <div className="text-sm text-gray-500 flex items-center gap-2">
+                            <Calendar size={16} />
+                            {new Date(doc.createdAt).toLocaleDateString('pt-BR')}
+                          </div>
+                          <ChevronRight className="text-gray-400 group-hover:text-indigo-600 transition-colors" />
                         </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-sm text-gray-500 flex items-center gap-2">
-                          <Calendar size={16} />
-                          {new Date(doc.createdAt).toLocaleDateString('pt-BR')}
-                        </div>
-                        <ChevronRight className="text-gray-400 group-hover:text-indigo-600 transition-colors" />
                       </div>
                     </div>
+                  ))}
+                </div>
+
+                {/* Paginação */}
+                <div className="flex justify-center items-center gap-2 mt-6">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`p-2 rounded-lg ${
+                      currentPage === 1
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-white text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        className={`w-8 h-8 rounded-lg ${
+                          currentPage === page
+                            ? 'bg-indigo-600 text-white'
+                            : 'bg-white text-gray-600 hover:bg-gray-50'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
                   </div>
-                ))}
-              </div>
+
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`p-2 rounded-lg ${
+                      currentPage === totalPages
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-white text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                </div>
+              </>
             )}
           </div>
         </div>

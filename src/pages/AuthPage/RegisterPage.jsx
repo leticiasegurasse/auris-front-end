@@ -1,13 +1,15 @@
 import { useForm } from "../../hooks/useForm";
-import { Mail, Lock, User, Clipboard } from "lucide-react";
+import { Mail, Lock, User, Clipboard, Loader2 } from "lucide-react";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import AuthTabs from "../../components/ButtonComponent/AuthTabs";
 import { registerRequest, loginRequest } from "../../api/auth";
 import { useAuth } from "../../hooks/useAuth";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import SubLayout from "../../layouts/SubLayout";
+import { useState } from "react";
 
 function RegisterPage() {
+  const [isLoading, setIsLoading] = useState(false);
   const { values, errors, handleChange, validateForm } = useForm(
     {
       name_user: "",
@@ -46,6 +48,7 @@ function RegisterPage() {
         return;
       }
 
+      setIsLoading(true);
       const payload = {
         name_user: values.name_user,
         email: values.email,
@@ -58,11 +61,27 @@ function RegisterPage() {
 
         // login automático após cadastro
         const response = await loginRequest(values.email, values.password);
+        
+        // Verifica se existe um link de pagamento na resposta
+        if (response.data.paymentLink) {
+          window.location.href = response.data.paymentLink;
+          return;
+        }
+
         login(response.data);
         goTo("HOME");
       } catch (error) {
         console.error("Erro no cadastro ou login:", error.response?.data || error.message);
+        
+        // Verifica se o erro contém um link de pagamento
+        if (error.response?.data?.paymentLink) {
+          window.location.href = error.response.data.paymentLink;
+          return;
+        }
+        
         alert("Erro ao cadastrar ou logar usuário: " + (error.response?.data?.message || "verifique os dados."));
+      } finally {
+        setIsLoading(false);
       }
     } else {
       alert("formulario invalido")
@@ -170,8 +189,16 @@ function RegisterPage() {
           <Button
             type="submit"
             size="full"
+            disabled={isLoading}
           >
-            Cadastrar
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Cadastrando...
+              </>
+            ) : (
+              "Cadastrar"
+            )}
           </Button>
         </form>
       </div>

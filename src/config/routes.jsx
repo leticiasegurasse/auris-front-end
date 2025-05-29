@@ -20,4 +20,6 @@ export const ROUTES = {
     EXERCISE_DETAILS: '/exercises/:exerciseId',
 
     CALENDAR: '/calendar',
+
+    PAYMENT_DONE: '/done',
 };

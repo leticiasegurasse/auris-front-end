@@ -5,6 +5,7 @@ import LoginPage from '../pages/AuthPage/LoginPage';
 import RegisterPage from '../pages/AuthPage/RegisterPage';
 import HomePage from '../pages/HomePage/HomePage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
+import PaymentConfirmationPage from '../pages/PaymentPage/PaymentConfirmationPage';
 
 import PatientsPage from '../pages/PatientPage/PatientsPage';
 import PatientDetailsPage from '../pages/PatientPage/PatientDetailsPage';
@@ -42,6 +43,15 @@ const AppRouter = () => (
         element={
           <PublicRoute>
             <RegisterPage />
+          </PublicRoute>
+        }
+      />
+
+      <Route
+        path={ROUTES.PAYMENT_DONE}
+        element={
+          <PublicRoute>
+            <PaymentConfirmationPage />
           </PublicRoute>
         }
       />
@@ -154,6 +164,8 @@ const AppRouter = () => (
           </PrivateRoute>
         }
       />
+
+      
     </Routes>
   </BrowserRouter>
 );

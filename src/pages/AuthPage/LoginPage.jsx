@@ -7,11 +7,13 @@ import { loginRequest } from "../../api/auth";
 import { useAuth } from "../../hooks/useAuth"; 
 import SubLayout from "../../layouts/SubLayout";
 import { useState } from "react";
+import AlertMessage from "../../components/AlertComponent/AlertMessage";
 
 function LoginPage() {
   const { goTo } = useCustomNavigate();
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   const { values, errors, handleChange, validateForm } = useForm(
     { email: "", password: "" },
@@ -27,7 +29,7 @@ function LoginPage() {
         const res = await loginRequest(values.email, values.password);
   
         if (res.data.user?.role !== "therapist") {
-          alert("Apenas fonoaudiólogos podem acessar o sistema.");
+          setAlert({ type: "error", message: "Apenas fonoaudiólogos podem acessar o sistema." });
           return;
         }
   
@@ -38,12 +40,12 @@ function LoginPage() {
         const paymentLink = err?.response?.data?.paymentLink;
       
         if (paymentLink) {
-          alert(message || "Sua assinatura não está ativa. Redirecionando para o pagamento...");
+          setAlert({ type: "warning", message: message || "Sua assinatura não está ativa. Redirecionando para o pagamento..." });
           window.location.href = paymentLink;
           return;
         }
       
-        alert(message || "Falha no login. Verifique suas credenciais.");
+        setAlert({ type: "error", message: message || "Falha no login. Verifique suas credenciais." });
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -57,6 +59,15 @@ function LoginPage() {
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-bold text-white">Bem-vindo de volta</h1>
           </div>
+
+          {alert && (
+            <AlertMessage
+              type={alert.type}
+              message={alert.message}
+              onClose={() => setAlert(null)}
+              className="mb-4"
+            />
+          )}
 
           <AuthTabs />
 
