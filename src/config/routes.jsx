@@ -22,4 +22,6 @@ export const ROUTES = {
     CALENDAR: '/calendar',
 
     PAYMENT_DONE: '/done',
+
+    HELP: '/help',
 };

@@ -22,6 +22,8 @@ import CalendarPage from '../pages/CalendarPage/CalendarPage';
 
 import EvolutionPage from '../pages/EvolutionPage/EvolutionPage';
 
+import HelpPage from '../pages/HelpPage/HelpPage';
+
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 
@@ -165,7 +167,14 @@ const AppRouter = () => (
         }
       />
 
-      
+      <Route
+        path={ROUTES.HELP}
+        element={
+          <PrivateRoute>
+            <HelpPage />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   </BrowserRouter>
 );

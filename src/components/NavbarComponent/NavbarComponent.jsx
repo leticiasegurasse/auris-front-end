@@ -15,6 +15,7 @@ import {
   CalendarCheck,
   Headset,
   ChevronLeft,
+  HelpCircle,
 } from "lucide-react";
 
 function NavbarComponent() {
@@ -93,6 +94,7 @@ function NavbarComponent() {
               { name: "Documentos", icon: Activity, path: ROUTES.EVOLUTION },
               { name: "Exercícios", icon: ClipboardPlus, path: ROUTES.CATEGORIES },
               { name: "Agenda", icon: CalendarCheck, path: ROUTES.CALENDAR },
+              { name: "Ajuda e Suporte", icon: HelpCircle, path: ROUTES.HELP },
             ].map((item) => (
               <li
                 key={item.name}
@@ -125,18 +127,7 @@ function NavbarComponent() {
               </li>
             ))}
 
-            {/* Menu de Ajuda e Suporte */}
-            <li className="border-t border-gray-100 pt-4 group">
-              <a
-                href="https://wa.me/5522996057202"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`flex items-center ${isCollapsed ? "justify-center" : "justify-start"} gap-3 py-2 px-4 rounded-md`}
-              >
-                <Headset className={`${isCollapsed ? "w-5 h-5" : "w-4 h-4"} text-gray-600 group-hover:text-[var(--secondary-color)]`} />
-                {!isCollapsed && <span className="text-gray-800 text-sm">Ajuda e Suporte</span>}
-              </a>
-            </li>
+            
           </ul>
         </nav>
       </aside>
