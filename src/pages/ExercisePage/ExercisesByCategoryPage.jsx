@@ -6,7 +6,7 @@ import { getExercisesByCategory } from "../../api/exercises/exercise";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
-import { Pencil, Trash2, Edit2, ArrowLeft, Plus, Play, BookOpen, ChevronRight } from "lucide-react";
+import { Pencil, Trash2, Edit2, ArrowLeft, Plus, Play, BookOpen, ChevronRight, ChevronLeft } from "lucide-react";
 import PageHeader from "../../components/PageHeader/PageHeader";
 
 function ExercisesByCategoryPage() {
@@ -23,13 +23,16 @@ function ExercisesByCategoryPage() {
     title: "",
     description: ""
   });
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [limit] = useState(5);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const [categoryData, exercisesData] = await Promise.all([
           getCategoryById(categoryId),
-          getExercisesByCategory(categoryId),
+          getExercisesByCategory(categoryId, page, limit),
         ]);
 
         setCategory(categoryData);
@@ -37,16 +40,30 @@ function ExercisesByCategoryPage() {
           title: categoryData.title,
           description: categoryData.description
         });
-        setExercises(exercisesData);
+        
+        if (Array.isArray(exercisesData)) {
+          setExercises(exercisesData);
+          // Como não temos paginação do backend, vamos calcular o total de páginas
+          // baseado no número total de exercícios
+          setTotalPages(Math.ceil(exercisesData.length / limit));
+        } else {
+          setExercises([]);
+          setTotalPages(1);
+        }
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
+        setAlert({ type: "error", message: "Erro ao carregar dados" });
       } finally {
         setLoading(false);
       }
     }
 
     fetchData();
-  }, [categoryId]);
+  }, [categoryId, page, limit]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   const handleEditClick = () => {
     setEditForm({
@@ -190,7 +207,7 @@ function ExercisesByCategoryPage() {
           )}
 
           <div className="bg-white rounded-xl shadow-lg border border-gray-100">
-            {exercises.map((exercise) => (
+            {exercises.slice((page - 1) * limit, page * limit).map((exercise) => (
               <div
                 key={exercise._id}
                 className="p-6 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-all duration-200 cursor-pointer"
@@ -229,6 +246,51 @@ function ExercisesByCategoryPage() {
                   Criar Primeiro Exercício
                 </Button>
               </div>
+            </div>
+          )}
+
+          {/* Paginação */}
+          {exercises.length > 0 && (
+            <div className="flex justify-center items-center gap-2 mt-6">
+              <button
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page === 1}
+                className={`p-2 rounded-lg ${
+                  page === 1
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <ChevronLeft size={20} />
+              </button>
+
+              <div className="flex items-center gap-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`w-8 h-8 rounded-lg ${
+                      page === pageNum
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-white text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page === totalPages}
+                className={`p-2 rounded-lg ${
+                  page === totalPages
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <ChevronRight size={20} />
+              </button>
             </div>
           )}
         </div>

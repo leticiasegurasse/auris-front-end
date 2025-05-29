@@ -1,7 +1,12 @@
 import api from "../axiosInstance";
 
-export async function getExercisesByCategory(categoryId) {
-  const response = await api.get(`/exercises/category/${categoryId}`);
+export async function getExercisesByCategory(categoryId, page = 1, limit = 5) {
+  const response = await api.get(`/exercises/category/${categoryId}`, {
+    params: {
+      page,
+      limit
+    }
+  });
   return response.data;
 }
 
