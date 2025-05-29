@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
-import { getAllInvoices } from '../../api/checkout/invoices';
+import { getAllInvoices, cancelSubscription } from '../../api/checkout/invoices';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import MainLayout from '../../layouts/MainLayout';
-import { Download, AlertCircle, CheckCircle2, Clock, XCircle, Receipt, DollarSign, Calendar } from 'lucide-react';
+import { Download, AlertCircle, CheckCircle2, Clock, XCircle, Receipt, DollarSign, Calendar, AlertTriangle } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Financial() {
     const [invoices, setInvoices] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isCancelling, setIsCancelling] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
     const userData = JSON.parse(localStorage.getItem('user'));
     const subscriptionStatus = userData?.stripeSubscriptionStatus || 'inactive';
+    const { logout } = useAuth();
 
     useEffect(() => {
         const fetchInvoices = async () => {
@@ -25,6 +29,23 @@ export default function Financial() {
 
         fetchInvoices();
     }, []);
+
+    const handleCancelSubscription = async () => {
+        try {
+            setIsCancelling(true);
+            await cancelSubscription(userData.specificId);
+            // Faz logout do usuário
+            logout();
+            // Redireciona para a página de login
+            window.location.href = '/login';
+        } catch (error) {
+            console.error('Erro ao cancelar assinatura:', error);
+            alert('Erro ao cancelar assinatura. Por favor, tente novamente.');
+        } finally {
+            setIsCancelling(false);
+            setShowConfirmModal(false);
+        }
+    };
 
     const getStatusColor = (status) => {
         switch (status) {
@@ -81,8 +102,48 @@ export default function Financial() {
                         <h1 className="text-3xl font-bold text-gray-800">Financeiro</h1>
                         <p className="text-gray-600 mt-1">Gerencie suas faturas e assinatura</p>
                     </div>
+                    {subscriptionStatus === 'active' && (
+                        <button
+                            onClick={() => setShowConfirmModal(true)}
+                            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+                        >
+                            <AlertTriangle className="w-4 h-4" />
+                            Cancelar Assinatura
+                        </button>
+                    )}
                 </div>
                 
+                {/* Modal de Confirmação */}
+                {showConfirmModal && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+                            <div className="flex items-center gap-3 mb-4">
+                                <AlertTriangle className="w-6 h-6 text-red-600" />
+                                <h3 className="text-lg font-semibold text-gray-900">Cancelar Assinatura</h3>
+                            </div>
+                            <p className="text-gray-600 mb-6">
+                                Tem certeza que deseja cancelar sua assinatura? Esta ação não pode ser desfeita.
+                            </p>
+                            <div className="flex justify-end gap-3">
+                                <button
+                                    onClick={() => setShowConfirmModal(false)}
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                    disabled={isCancelling}
+                                >
+                                    Voltar
+                                </button>
+                                <button
+                                    onClick={handleCancelSubscription}
+                                    className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+                                    disabled={isCancelling}
+                                >
+                                    {isCancelling ? 'Cancelando...' : 'Confirmar Cancelamento'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-4">
