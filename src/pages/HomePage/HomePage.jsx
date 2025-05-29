@@ -39,8 +39,8 @@ function HomePage() {
         loadAppointments();
         loadRecentLogs();
         
-        setPatientsCount(patientsResponse.data.length);
-        setDocumentsStats(statsResponse);
+        setPatientsCount(patientsResponse?.patients?.length || 0);
+        setDocumentsStats(statsResponse || { total: 0, byType: { anamnese: 0, evolucao: 0 } });
         
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
@@ -149,7 +149,7 @@ function HomePage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500">Documentos</p>
-                <h3 className="text-3xl font-bold">{documentsStats.total}</h3>
+                <h3 className="text-3xl font-bold">{documentsStats?.total || 0}</h3>
               </div>
               <div className="bg-orange-100 p-3 rounded-full">
                 <ClipboardList className="w-6 h-6 text-orange-600" />

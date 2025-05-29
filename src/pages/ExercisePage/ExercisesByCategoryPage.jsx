@@ -189,31 +189,26 @@ function ExercisesByCategoryPage() {
             />
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white rounded-xl shadow-lg border border-gray-100">
             {exercises.map((exercise) => (
               <div
                 key={exercise._id}
-                className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+                className="p-6 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-all duration-200 cursor-pointer"
                 onClick={() => handleViewExerciseDetails(exercise._id)}
               >
-                <div className="flex flex-col h-full">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-blue-100 rounded-full">
-                        <Play className="text-blue-600" size={20} />
-                      </div>
-                      <h3 className="text-xl font-semibold text-gray-800">{exercise.title}</h3>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="p-2 bg-blue-100 rounded-full">
+                      <Play className="text-blue-600" size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800">{exercise.title}</h3>
+                      <p className="text-gray-600 mt-1">{exercise.description}</p>
                     </div>
                   </div>
-
-                  <p className="text-gray-600 mb-6 flex-grow">{exercise.description}</p>
-
-                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-                    <span className="text-sm text-gray-500">Detalhes do exercício</span>
-                    <div className="flex items-center gap-1 text-blue-600 hover:text-blue-700 transition-colors">
-                      Ver detalhes
-                      <ChevronRight size={16} />
-                    </div>
+                  <div className="flex items-center gap-2 text-blue-600">
+                    <span className="text-sm">Ver detalhes</span>
+                    <ChevronRight size={16} />
                   </div>
                 </div>
               </div>
