@@ -6,6 +6,7 @@ import RegisterPage from '../pages/AuthPage/RegisterPage';
 import HomePage from '../pages/HomePage/HomePage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PaymentConfirmationPage from '../pages/PaymentPage/PaymentConfirmationPage';
+import FinancialPage from '../pages/FinancialPage/Financial';
 
 import PatientsPage from '../pages/PatientPage/PatientsPage';
 import PatientDetailsPage from '../pages/PatientPage/PatientDetailsPage';
@@ -172,6 +173,15 @@ const AppRouter = () => (
         element={
           <PrivateRoute>
             <HelpPage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path={ROUTES.FINANCIAL}
+        element={
+          <PrivateRoute>
+            <FinancialPage />
           </PrivateRoute>
         }
       />

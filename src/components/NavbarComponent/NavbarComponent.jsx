@@ -16,6 +16,7 @@ import {
   Headset,
   ChevronLeft,
   HelpCircle,
+  DollarSign,
 } from "lucide-react";
 
 function NavbarComponent() {
@@ -94,6 +95,7 @@ function NavbarComponent() {
               { name: "Documentos", icon: Activity, path: ROUTES.EVOLUTION },
               { name: "Exercícios", icon: ClipboardPlus, path: ROUTES.CATEGORIES },
               { name: "Agenda", icon: CalendarCheck, path: ROUTES.CALENDAR },
+              { name: "Financeiro", icon: DollarSign, path: ROUTES.FINANCIAL },
               { name: "Ajuda e Suporte", icon: HelpCircle, path: ROUTES.HELP },
             ].map((item) => (
               <li

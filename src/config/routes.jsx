@@ -24,4 +24,6 @@ export const ROUTES = {
     PAYMENT_DONE: '/done',
 
     HELP: '/help',
+
+    FINANCIAL: '/financial',
 };
