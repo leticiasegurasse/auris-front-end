@@ -137,7 +137,7 @@ function HomePage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500">Exercícios Ativos</p>
-                <h3 className="text-3xl font-bold">12</h3>
+                <h3 className="text-3xl font-bold">0</h3>
               </div>
               <div className="bg-purple-100 p-3 rounded-full">
                 <Activity className="w-6 h-6 text-purple-600" />

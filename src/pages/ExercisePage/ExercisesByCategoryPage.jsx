@@ -41,18 +41,26 @@ function ExercisesByCategoryPage() {
           description: categoryData.description
         });
         
-        if (Array.isArray(exercisesData)) {
-          setExercises(exercisesData);
-          // Como não temos paginação do backend, vamos calcular o total de páginas
-          // baseado no número total de exercícios
-          setTotalPages(Math.ceil(exercisesData.length / limit));
+        if (exercisesData && exercisesData.exercises && Array.isArray(exercisesData.exercises)) {
+          setExercises(exercisesData.exercises);
+          setTotalPages(exercisesData.pagination.totalPages);
         } else {
+          console.error("Dados de exercícios inválidos:", exercisesData);
           setExercises([]);
           setTotalPages(1);
+          setAlert({ 
+            type: "error", 
+            message: "Erro ao carregar exercícios: Formato de dados inválido" 
+          });
         }
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
-        setAlert({ type: "error", message: "Erro ao carregar dados" });
+        setAlert({ 
+          type: "error", 
+          message: error.response?.data?.message || "Erro ao carregar dados" 
+        });
+        setExercises([]);
+        setTotalPages(1);
       } finally {
         setLoading(false);
       }

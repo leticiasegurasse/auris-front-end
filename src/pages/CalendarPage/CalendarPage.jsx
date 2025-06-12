@@ -43,17 +43,22 @@ function CalendarPage() {
   const loadPatients = async () => {
     try {
       const response = await getAllPatients();
-      setPatients(response.data || []);
+      console.log("Resposta completa da API:", response);
+      console.log("Primeiro paciente:", response.patients?.[0]);
+      setPatients(response.patients || []);
     } catch (error) {
       console.error("Erro ao carregar pacientes:", error);
       setAlert({ type: "error", message: "Erro ao carregar pacientes: " + error });
-      setPatients([]); // Garante que patients seja um array vazio em caso de erro
+      setPatients([]);
     }
   };
 
-  const filteredPatients = (patients || []).filter(patient => 
-    patient?.userId?.name_user?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPatients = (patients || []).filter(patient => {
+    console.log("Estrutura completa do paciente:", patient);
+    const patientName = patient?.name || patient?.name_user || patient?.userId?.name_user || '';
+    console.log("Nome do paciente encontrado:", patientName);
+    return patientName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const loadAppointments = async () => {
     try {
@@ -295,7 +300,9 @@ function CalendarPage() {
                       onClick={() => setIsSearchOpen(!isSearchOpen)}
                     >
                       {formData.patient ? 
-                        patients.find(p => p._id === formData.patient)?.userId?.name_user || 'Sem nome' : 
+                        (patients.find(p => p._id === formData.patient)?.name || 
+                         patients.find(p => p._id === formData.patient)?.name_user || 
+                         'Sem nome') : 
                         'Selecione um paciente'
                       }
                     </div>

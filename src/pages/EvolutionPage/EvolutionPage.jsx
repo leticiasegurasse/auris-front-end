@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Plus, Search, Filter, X, User, Calendar, Clock, ChevronRight, ChevronLeft } from 'lucide-react';
+import { FileText, Plus, Search, Filter, X, User, Calendar, Clock, ChevronRight, ChevronLeft, Edit2 } from 'lucide-react';
 import { ROUTES } from '../../config/routes';
 import MainLayout from '../../layouts/MainLayout';
-import { getAllPatientDocuments, getDocumentsStats, getDocumentsByPatientName } from '../../api/patients/patientDocuments';
+import { getAllPatientDocuments, getDocumentsStats, getDocumentsByPatientName, updatePatientDocument } from '../../api/patients/patientDocuments';
 import { getAllPatients } from '../../api/patients/patient';
 import AlertMessage from '../../components/AlertComponent/AlertMessage';
 import { createPatientDocument } from '../../api/patients/patientDocuments';
@@ -32,6 +32,9 @@ function EvolutionPage() {
       evolucao: 0
     }
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedReport, setEditedReport] = useState('');
+  const [editedObservation, setEditedObservation] = useState('');
 
   useEffect(() => {
     async function fetchData() {
@@ -53,9 +56,16 @@ function EvolutionPage() {
           setTotalPages(1);
         }
         
-        if (patientsResponse && patientsResponse.data) {
-          setPatients(patientsResponse.data);
+        console.log("Resposta da API de pacientes:", patientsResponse);
+        
+        // Verifica se patientsResponse é um objeto e se tem a propriedade patients
+        if (patientsResponse && typeof patientsResponse === 'object') {
+          const patientsList = Array.isArray(patientsResponse.patients) ? patientsResponse.patients : 
+                             Array.isArray(patientsResponse.data) ? patientsResponse.data : [];
+          console.log("Lista de pacientes:", patientsList);
+          setPatients(patientsList);
         } else {
+          console.log("Resposta inválida da API de pacientes");
           setPatients([]);
         }
 
@@ -67,6 +77,7 @@ function EvolutionPage() {
         setAlert({ type: 'error', message: 'Erro ao carregar dados' });
         setDocuments([]);
         setTotalPages(1);
+        setPatients([]);
       } finally {
         setLoading(false);
       }
@@ -117,6 +128,9 @@ function EvolutionPage() {
 
   const handleDocumentClick = (doc) => {
     setSelectedDocument(doc);
+    setEditedReport(doc.report);
+    setEditedObservation(doc.observation || '');
+    setIsEditing(false);
     setIsModalOpen(true);
   };
 
@@ -147,8 +161,13 @@ function EvolutionPage() {
       await createPatientDocument(documentData);
       
       // Atualizar a lista de documentos
-      const updatedDocuments = await getAllPatientDocuments();
-      setDocuments(updatedDocuments);
+      const updatedDocuments = await getAllPatientDocuments(currentPage, limit);
+      if (updatedDocuments && updatedDocuments.reports) {
+        setDocuments(updatedDocuments.reports);
+        if (updatedDocuments.pagination) {
+          setTotalPages(updatedDocuments.pagination.totalPages);
+        }
+      }
       
       // Limpar formulário e fechar modal
       setSelectedPatient(null);
@@ -162,6 +181,42 @@ function EvolutionPage() {
       console.error('Erro ao salvar documento:', error);
       setAlert({ type: 'error', message: 'Erro ao salvar documento' });
     }
+  };
+
+  const handleUpdateDocument = async () => {
+    try {
+      const updatedData = {
+        report: editedReport,
+        observation: editedObservation
+      };
+
+      await updatePatientDocument(selectedDocument._id, updatedData);
+      
+      // Atualizar o documento na lista
+      const updatedDocuments = await getAllPatientDocuments(currentPage, limit);
+      if (updatedDocuments && updatedDocuments.reports) {
+        setDocuments(updatedDocuments.reports);
+      }
+
+      // Atualizar o documento selecionado
+      setSelectedDocument({
+        ...selectedDocument,
+        report: editedReport,
+        observation: editedObservation
+      });
+
+      setIsEditing(false);
+      setAlert({ type: 'success', message: 'Documento atualizado com sucesso!' });
+    } catch (error) {
+      console.error('Erro ao atualizar documento:', error);
+      setAlert({ type: 'error', message: 'Erro ao atualizar documento' });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditedReport(selectedDocument.report);
+    setEditedObservation(selectedDocument.observation || '');
+    setIsEditing(false);
   };
 
   return (
@@ -384,9 +439,9 @@ function EvolutionPage() {
                       required
                     >
                       <option value="">Selecione o paciente</option>
-                      {patients.map((patient) => (
+                      {Array.isArray(patients) && patients.map((patient) => (
                         <option key={patient._id} value={patient._id}>
-                          {patient.userId?.name_user}
+                          {patient.name || patient.userId?.name_user || 'Sem nome'}
                         </option>
                       ))}
                     </select>
@@ -458,12 +513,22 @@ function EvolutionPage() {
                 <h2 className="text-2xl font-bold text-gray-800">
                   {selectedDocument.type === 'anamnese' ? 'Anamnese' : selectedDocument.type === 'evolucao' ? 'Evolução' : selectedDocument.type}
                 </h2>
-                <button
-                  onClick={closeModal}
-                  className="text-gray-500 hover:text-gray-700 transition-colors"
-                >
-                  <X size={24} />
-                </button>
+                <div className="flex items-center gap-2">
+                  {!isEditing && (
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="text-indigo-600 hover:text-indigo-700 transition-colors p-2"
+                    >
+                      <Edit2 size={24} />
+                    </button>
+                  )}
+                  <button
+                    onClick={closeModal}
+                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
               </div>
               
               <div className="space-y-6">
@@ -482,13 +547,43 @@ function EvolutionPage() {
 
                 <div className="bg-white border border-gray-200 rounded-xl p-6">
                   <h3 className="font-medium text-lg text-gray-800 mb-4">Relatório:</h3>
-                  <p className="text-gray-600 whitespace-pre-wrap leading-relaxed">{selectedDocument.report}</p>
+                  {isEditing ? (
+                    <textarea
+                      value={editedReport}
+                      onChange={(e) => setEditedReport(e.target.value)}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-32"
+                    />
+                  ) : (
+                    <p className="text-gray-600 whitespace-pre-wrap leading-relaxed">{selectedDocument.report}</p>
+                  )}
                 </div>
 
-                {selectedDocument.observation && (
-                  <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
-                    <h3 className="font-medium text-lg text-gray-800 mb-4">Observação:</h3>
-                    <p className="text-gray-600 whitespace-pre-wrap leading-relaxed">{selectedDocument.observation}</p>
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+                  <h3 className="font-medium text-lg text-gray-800 mb-4">Observação:</h3>
+                  {isEditing ? (
+                    <textarea
+                      value={editedObservation}
+                      onChange={(e) => setEditedObservation(e.target.value)}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-20"
+                    />
+                  ) : (
+                    <p className="text-gray-600 whitespace-pre-wrap leading-relaxed">{selectedDocument.observation || 'Sem observações'}</p>
+                  )}
+                </div>
+
+                {isEditing && (
+                  <div className="flex justify-end gap-4 mt-6">
+                    <Button
+                      onClick={handleCancelEdit}
+                      variant="outline"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      onClick={handleUpdateDocument}
+                    >
+                      Salvar
+                    </Button>
                   </div>
                 )}
               </div>

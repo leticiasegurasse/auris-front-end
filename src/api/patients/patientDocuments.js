@@ -22,6 +22,7 @@ export const createPatientDocument = async (data) => {
   
   export const updatePatientDocument = async (id, data) => {
     const response = await api.put(`/patient-reports/${id}`, data);
+    console.log(response.data);
     return response.data;
   };
   

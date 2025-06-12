@@ -152,9 +152,15 @@ function PatientDetailsPage() {
         return;
       }
       const response = await getExercisesByCategory(categoryId);
-      setAvailableExercises(response);
+      if (response && response.exercises && Array.isArray(response.exercises)) {
+        setAvailableExercises(response.exercises);
+      } else {
+        console.error("Dados de exercícios inválidos:", response);
+        setAvailableExercises([]);
+      }
     } catch (error) {
       console.error("Erro ao buscar exercícios da categoria:", error);
+      setAvailableExercises([]);
     }
   }
   
