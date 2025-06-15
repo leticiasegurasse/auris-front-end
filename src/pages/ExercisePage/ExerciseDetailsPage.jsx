@@ -144,26 +144,26 @@ function ExerciseDetailsPage() {
   return (
     <MainLayout>
       <div>
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center gap-4 mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
             <PageHeader 
-                title={exercise.title}
-                description={exercise.description}
-              />
-            <div className="flex gap-2">
+              title={exercise.title}
+              description={exercise.description}
+            />
+            <div className="flex gap-2 w-full sm:w-auto">
               <button 
                 onClick={handleEditClick}
-                className="flex items-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200"
               >
                 <Pencil size={18} />
-                Editar
+                <span className="text-sm">Editar</span>
               </button>
               <button 
                 onClick={() => setIsDeleteModalOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200"
               >
                 <Trash2 size={18} />
-                Excluir
+                <span className="text-sm">Excluir</span>
               </button>
             </div>
           </div>
@@ -172,39 +172,39 @@ function ExerciseDetailsPage() {
             <AlertMessage 
               type={alert.type} 
               message={alert.message} 
-              className="mb-8" 
+              className="mb-6 sm:mb-8" 
               onClose={() => setAlert(null)} 
             />
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 bg-blue-100 rounded-full">
-                  <BookOpen className="text-blue-600" size={24} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
+            <div className="bg-white rounded-xl p-4 sm:p-8 shadow-lg border border-gray-100">
+              <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                <div className="p-2 sm:p-3 bg-blue-100 rounded-full">
+                  <BookOpen className="text-blue-600" size={20} />
                 </div>
-                <h2 className="text-xl font-semibold text-gray-800">Detalhes do Exercício</h2>
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Detalhes do Exercício</h2>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Descrição</h3>
-                  <p className="text-gray-700">{exercise.description || "Sem descrição"}</p>
+                  <p className="text-sm sm:text-base text-gray-700">{exercise.description || "Sem descrição"}</p>
                 </div>
 
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Instruções</h3>
-                  <p className="text-gray-700">{exercise.instructions || "Sem instruções específicas"}</p>
+                  <p className="text-sm sm:text-base text-gray-700">{exercise.instructions || "Sem instruções específicas"}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 bg-blue-100 rounded-full">
-                  <FileAudio className="text-blue-600" size={24} />
+            <div className="bg-white rounded-xl p-4 sm:p-8 shadow-lg border border-gray-100">
+              <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                <div className="p-2 sm:p-3 bg-blue-100 rounded-full">
+                  <FileAudio className="text-blue-600" size={20} />
                 </div>
-                <h2 className="text-xl font-semibold text-gray-800">Áudio de Referência</h2>
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Áudio de Referência</h2>
               </div>
 
               {exercise.audioReference ? (
@@ -213,17 +213,17 @@ function ExerciseDetailsPage() {
                     <source src={audioUrl} type="audio/mpeg" />
                     Seu navegador não suporta o elemento de áudio.
                   </audio>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500">
                     <Play size={16} />
                     <span>Clique para reproduzir o áudio de referência</span>
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-8">
-                  <div className="p-4 bg-gray-100 rounded-full w-16 h-16 mx-auto mb-4">
-                    <FileAudio className="text-gray-400 mx-auto" size={32} />
+                <div className="text-center py-6 sm:py-8">
+                  <div className="p-4 bg-gray-100 rounded-full w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4">
+                    <FileAudio className="text-gray-400 mx-auto" size={24} />
                   </div>
-                  <p className="text-gray-500">Nenhum áudio cadastrado para este exercício.</p>
+                  <p className="text-sm sm:text-base text-gray-500">Nenhum áudio cadastrado para este exercício.</p>
                 </div>
               )}
             </div>
@@ -233,12 +233,12 @@ function ExerciseDetailsPage() {
 
       {/* Modal de Edição */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 shadow-2xl w-full max-w-md transform transition-all duration-300">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">Editar Exercício</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-4 sm:p-8 shadow-2xl w-full max-w-md transform transition-all duration-300">
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Editar Exercício</h2>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Título</label>
                 <input
@@ -246,7 +246,7 @@ function ExerciseDetailsPage() {
                   name="title"
                   value={editForm.title}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                 />
               </div>
               <div>
@@ -255,7 +255,7 @@ function ExerciseDetailsPage() {
                   name="description"
                   value={editForm.description}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
+                  className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
                   rows="3"
                 />
               </div>
@@ -265,7 +265,7 @@ function ExerciseDetailsPage() {
                   name="instructions"
                   value={editForm.instructions}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
+                  className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
                   rows="3"
                 />
               </div>
@@ -276,19 +276,21 @@ function ExerciseDetailsPage() {
                     type="file"
                     accept="audio/*"
                     onChange={handleFileChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                   />
                 </div>
               </div>
-              <div className="flex justify-end gap-4">
+              <div className="flex flex-col sm:flex-row justify-end gap-4">
                 <Button 
                   onClick={handleCancelEdit}
                   variant="outline"
+                  className="w-full sm:w-auto"
                 >
                   Cancelar
                 </Button>
                 <Button 
                   onClick={handleSaveEdit}
+                  className="w-full sm:w-auto"
                 >
                   Salvar
                 </Button>
@@ -300,26 +302,27 @@ function ExerciseDetailsPage() {
 
       {/* Modal de Confirmação de Exclusão */}
       {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 shadow-2xl w-full max-w-md transform transition-all duration-300">
-            <div className="p-4 bg-red-100 rounded-full w-16 h-16 mx-auto mb-4">
-              <Trash2 className="text-red-600 mx-auto" size={32} />
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-4 sm:p-8 shadow-2xl w-full max-w-md transform transition-all duration-300">
+            <div className="p-4 bg-red-100 rounded-full w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4">
+              <Trash2 className="text-red-600 mx-auto" size={24} />
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 text-center mb-4">Confirmar Exclusão</h2>
-            <p className="text-gray-600 text-center mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-4">Confirmar Exclusão</h2>
+            <p className="text-sm sm:text-base text-gray-600 text-center mb-6">
               Tem certeza que deseja excluir o exercício "{exercise.title}"? 
               Esta ação não pode ser desfeita.
             </p>
-            <div className="flex justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button 
                 onClick={() => setIsDeleteModalOpen(false)}
                 variant="outline"
+                className="w-full sm:w-auto"
               >
                 Cancelar
               </Button>
               <Button 
                 onClick={handleDeleteExercise}
-                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 Confirmar Exclusão
               </Button>

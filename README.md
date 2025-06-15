@@ -1,91 +1,62 @@
-💻 RentTech
-RentTech é um aplicativo moderno e flexível para aluguel de computadores e notebooks de alta performance. A plataforma foi pensada para atender tanto clientes individuais quanto empresas que precisam de equipamentos temporariamente, com segurança, praticidade e agilidade.
+# FonoFront - Sistema de Gestão Fonoaudiológica
 
-📲 Visão Geral
-RentTech oferece:
+## 📋 Descrição
+FonoFront é uma aplicação web moderna desenvolvida para gerenciamento de clínicas fonoaudiológicas. O sistema oferece uma interface intuitiva e funcionalidades essenciais para o gerenciamento de pacientes, agendamentos e prontuários.
 
-Catálogo completo de dispositivos com filtros inteligentes
+## 🚀 Tecnologias Utilizadas
+- React 18
+- Vite
+- TailwindCSS
+- React Router DOM
+- FullCalendar
+- Axios
+- Lucide React
 
-Aluguel personalizado por hora, dia, semana ou mês
+## 🛠️ Funcionalidades Principais
+- Gerenciamento de pacientes
+- Agendamento de consultas
+- Prontuários
+- Interface responsiva
+- Calendário interativo
+- Acompanhamento de exercicios dos pacientes
 
-Entrega e devolução flexível
+## 📦 Instalação
 
-Seguro opcional contra danos ou roubo
+1. Clone o repositório:
+```bash
+git clone https://github.com/leticiasegurasse/auris-front-end.git
+```
 
-Rastreamento de dispositivos alugados
+2. Instale as dependências:
+```bash
+npm install
+```
 
-Suporte técnico durante o período de uso
+3. Inicie o servidor de desenvolvimento:
+```bash
+npm run dev
+```
 
-Avaliações de equipamentos
+## 🔧 Scripts Disponíveis
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run build` - Gera a build de produção
+- `npm run preview` - Visualiza a build de produção localmente
+- `npm run lint` - Executa a verificação de código
 
-Programa de fidelidade com pontos e descontos
-
-Área corporativa para empresas com gestão de múltiplos equipamentos
-
-🛠 Tecnologias Utilizadas
-💻 Frontend
-React Native (Expo)
-
-React.js (interface web/admin - opcional)
-
-TailwindCSS (para web)
-
-⚙️ Backend
-Node.js com NestJS (ou Django REST Framework)
-
-PostgreSQL ou MySQL
-
-JWT para autenticação
-
-Stripe / MercadoPago para pagamentos
-
-🧩 Outros
-Firebase (para notificações push)
-
-Google Maps API / Mapbox (para rastreamento)
-
-AWS S3 ou Firebase Storage (para upload de imagens)
-
-Docker (para deploy)
-
-🧱 Estrutura do Projeto
-/renttech
-├── mobile-app/            # Aplicativo mobile (React Native)
-├── web-admin/             # Dashboard web administrativo (opcional)
-├── backend/               # API REST (NestJS ou Django)
-├── database/              # Scripts e modelo ER do banco
-└── README.md              # Documentação do projeto
-
-🧑‍💻 Funcionalidades
-Cliente
-Criar conta, fazer login
-
-Navegar e filtrar equipamentos
-
-Alugar dispositivos com prazos flexíveis
-
-Rastrear entregas
-
-Avaliar equipamentos
-
-Consultar histórico de pedidos
-
-Participar do programa de fidelidade
-
-Empresa
-Cadastro com CNPJ
-
-Aluguel de múltiplos dispositivos
-
-Gerenciamento de equipe
-
-Controle de faturas e entregas por setor
-
-Admin
-Cadastro e gerenciamento de equipamentos
-
-Acompanhamento de aluguéis e status
-
-Gestão de usuários
-
-Relatórios financeiros e de desempenho
+## 📁 Estrutura do Projeto
+```
+src/
+├── api/          # Configurações e chamadas de API
+├── assets/       # Recursos estáticos
+├── components/   # Componentes reutilizáveis
+├── config/       # Configurações do projeto
+├── context/      # Contextos do React
+├── hooks/        # Custom hooks
+├── layouts/      # Layouts da aplicação
+├── middlewares/  # Middlewares
+├── mocks/        # Dados mockados
+├── pages/        # Páginas da aplicação
+├── routes/       # Configuração de rotas
+├── styles/       # Estilos globais
+└── utils/        # Funções utilitárias
+```

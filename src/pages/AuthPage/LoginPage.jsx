@@ -104,16 +104,6 @@ function LoginPage() {
               </div>
             </div>
 
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={() => goTo("forgotpassword")}
-                className="text-sm text-white/80 hover:text-white transition-colors flex items-center gap-1 group"
-              >
-                Esqueceu sua senha?
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
 
             <Button
               type="submit"

@@ -20,6 +20,7 @@ export const ROUTES = {
     EXERCISE_DETAILS: '/exercises/:exerciseId',
 
     CALENDAR: '/calendar',
+    FONO_CALENDAR: '/fono_calendar',
 
     PAYMENT_DONE: '/done',
 

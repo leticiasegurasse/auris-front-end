@@ -90,7 +90,8 @@ function PatientsPage() {
             </div>
           ) : (
             <>
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              {/* Visualização Desktop */}
+              <div className="hidden md:block bg-white rounded-xl shadow-lg overflow-hidden">
                 <div className="grid grid-cols-12 gap-4 p-4 bg-gray-50 border-b border-gray-200">
                   <div className="col-span-3 font-medium text-gray-700">Nome</div>
                   <div className="col-span-3 font-medium text-gray-700">Email</div>
@@ -137,6 +138,48 @@ function PatientsPage() {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Visualização Mobile */}
+              <div className="md:hidden space-y-4">
+                {patients.map((patient) => (
+                  <div
+                    key={patient._id}
+                    onClick={() => goTo("PATIENT", { id: patient._id })}
+                    className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow cursor-pointer"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-blue-100 rounded-full">
+                          <User className="text-blue-600" size={18} />
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-gray-800">
+                            {patient.userId?.name_user || 'Sem nome'}
+                          </h3>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(patient.status)}`}>
+                            {patient.status}
+                          </span>
+                        </div>
+                      </div>
+                      <ChevronRight size={16} className="text-gray-400" />
+                    </div>
+                    <div className="space-y-2 pl-11">
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Mail size={16} className="text-gray-400" />
+                        <span className="text-sm truncate">{patient.userId?.email || 'Sem email'}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Calendar size={16} className="text-gray-400" />
+                        <span className="text-sm">{new Date(patient.birthDate).toLocaleDateString()}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Stethoscope size={16} className="text-gray-400" />
+                        <span className="text-sm truncate">{patient.diagnosis || 'Sem diagnóstico'}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
 
               {/* Paginação */}

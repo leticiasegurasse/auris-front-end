@@ -1,56 +1,91 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "../../hooks/useForm";
 import MainLayout from "../../layouts/MainLayout";
 import Button from "../../components/ButtonComponent/ButtonComponent";
 import { useCustomNavigate } from "../../hooks/useCustomNavigate";
 import { useAuth } from "../../hooks/useAuth";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
-import { User, Mail, Clipboard, ArrowLeft } from "lucide-react";
-import { updateUserById } from "../../api/users/user";
-import { updateTherapistById } from "../../api/therapist/therapist";
+import { User, Mail, Clipboard, ArrowLeft, Lock } from "lucide-react";
+import { updateUserById, getUserById } from "../../api/users/user";
+import { updateTherapistById, getTherapistById } from "../../api/therapist/therapist";
 
 function ProfilePage() {
   const [alert, setAlert] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { goTo } = useCustomNavigate();
   const { user, login } = useAuth();
 
-  const { values, errors, handleChange, validateForm } = useForm(
+  const { values, errors, handleChange, validateForm, setValues } = useForm(
     {
-      name_user: user?.name_user || "",
-      email: user?.email || "",
-      crfa: user?.crfa || "",
+      name_user: "",
+      email: "",
+      crfa: "",
+      password: "",
     },
     {
       name_user: (v) => (v.trim() === "" ? "Campo obrigatório" : ""),
       email: (v) => (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? "Email inválido" : ""),
       crfa: (v) => (v.trim() === "" ? "Campo obrigatório" : ""),
+      password: (v) => (v && v.length < 6 ? "A senha deve ter pelo menos 6 caracteres" : ""),
     }
   );
+
+  useEffect(() => {
+    async function loadUserData() {
+      try {
+        setLoading(true);
+        // Busca dados do usuário
+        const userData = await getUserById(user.id);
+        // Busca dados do terapeuta
+        const therapistData = await getTherapistById(user.specificId);
+
+        // Atualiza o formulário com os dados
+        setValues({
+          name_user: userData.name_user,
+          email: userData.email,
+          crfa: therapistData.crfa,
+          password: "", // Não carregamos a senha por questões de segurança
+        });
+      } catch (err) {
+        setAlert({ type: "error", message: "Erro ao carregar dados do perfil" });
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (user?.id) {
+      loadUserData();
+    }
+  }, [user?.id, setValues]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (validateForm()) {
       try {
-        // Atualiza os dados do usuário (nome e email)
-        const updatedUser = await updateUserById(user.id, {
+        // Prepara os dados do usuário
+        const userData = {
           name_user: values.name_user,
-          email: values.email,
-        });
+        };
 
-        // Atualiza o CRFa do terapeuta
-        await updateTherapistById(user.id, {
-          crfa: values.crfa,
-        });
+        // Adiciona a senha apenas se ela foi alterada
+        if (values.password && values.password.trim() !== "") {
+          userData.password = values.password;
+        }
+
+        // Atualiza os dados do usuário
+        const updatedUser = await updateUserById(user.id, userData);
 
         // Atualiza o contexto de autenticação com os novos dados
         login({
           ...user,
           name_user: updatedUser.name_user,
-          email: updatedUser.email,
-          crfa: values.crfa,
         });
 
         setAlert({ type: "success", message: "Perfil atualizado com sucesso!" });
+        
+        // Limpa o campo de senha após a atualização
+        setValues(prev => ({ ...prev, password: "" }));
       } catch (err) {
         setAlert({ type: "error", message: "Erro ao atualizar perfil" });
         console.error(err);
@@ -60,9 +95,21 @@ function ProfilePage() {
     }
   }
 
+  if (loading) {
+    return (
+      <MainLayout>
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-center h-64">
+            <p className="text-gray-600">Carregando dados do perfil...</p>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
+
   return (
     <MainLayout>
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={() => goTo("HOME")}
@@ -106,10 +153,10 @@ function ProfilePage() {
                     value={values.email}
                     onChange={handleChange}
                     placeholder="E-mail"
-                    className={`w-full py-3 px-4 rounded-xl bg-gray-50 border-2 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-gray-300 focus:ring-2 focus:ring-gray-200 transition-all duration-200 ${errors.email ? "border-red-500" : "border-gray-200"}`}
+                    disabled
+                    className="w-full py-3 px-4 rounded-xl bg-gray-100 border-2 text-gray-600 text-sm placeholder-gray-400 cursor-not-allowed border-gray-200"
                   />
                 </div>
-                {errors.email && <p className="text-red-500 text-sm mt-1 ml-12">{errors.email}</p>}
               </div>
 
               <div className="relative group">
@@ -123,10 +170,27 @@ function ProfilePage() {
                     value={values.crfa}
                     onChange={handleChange}
                     placeholder="CRFa"
-                    className={`w-full py-3 px-4 rounded-xl bg-gray-50 border-2 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-gray-300 focus:ring-2 focus:ring-gray-200 transition-all duration-200 ${errors.crfa ? "border-red-500" : "border-gray-200"}`}
+                    disabled
+                    className="w-full py-3 px-4 rounded-xl bg-gray-100 border-2 text-gray-600 text-sm placeholder-gray-400 cursor-not-allowed border-gray-200"
                   />
                 </div>
-                {errors.crfa && <p className="text-red-500 text-sm mt-1 ml-12">{errors.crfa}</p>}
+              </div>
+
+              <div className="relative group">
+                <div className="flex items-center gap-2">
+                  <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center text-gray-600 group-focus-within:text-gray-800 transition-colors">
+                    <Lock className="w-5 h-5" />
+                  </div>
+                  <input
+                    type="password"
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    placeholder="Nova senha (deixe em branco para manter a atual)"
+                    className={`w-full py-3 px-4 rounded-xl bg-gray-50 border-2 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-gray-300 focus:ring-2 focus:ring-gray-200 transition-all duration-200 ${errors.password ? "border-red-500" : "border-gray-200"}`}
+                  />
+                </div>
+                {errors.password && <p className="text-red-500 text-sm mt-1 ml-12">{errors.password}</p>}
               </div>
             </div>
 

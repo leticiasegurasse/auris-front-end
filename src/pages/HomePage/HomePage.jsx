@@ -112,60 +112,60 @@ function HomePage() {
         </div>
 
         {/* Cards de Resumo */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white p-6 rounded-xl shadow-md">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500">Total de Pacientes</p>
-                <h3 className="text-3xl font-bold">{patientsCount}</h3>
+                <p className="text-sm sm:text-base text-gray-500">Total de Pacientes</p>
+                <h3 className="text-2xl sm:text-3xl font-bold">{patientsCount}</h3>
               </div>
-              <div className="bg-blue-100 p-3 rounded-full">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
+                <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-md">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500">Total de Consultas</p>
-                <h3 className="text-3xl font-bold">{totalAppointments}</h3>
+                <p className="text-sm sm:text-base text-gray-500">Total de Consultas</p>
+                <h3 className="text-2xl sm:text-3xl font-bold">{totalAppointments}</h3>
               </div>
-              <div className="bg-green-100 p-3 rounded-full">
-                <Calendar className="w-6 h-6 text-green-600" />
+              <div className="bg-green-100 p-2 sm:p-3 rounded-full">
+                <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-md">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500">Exercícios Ativos</p>
-                <h3 className="text-3xl font-bold">{totalExercises}</h3>
+                <p className="text-sm sm:text-base text-gray-500">Exercícios Ativos</p>
+                <h3 className="text-2xl sm:text-3xl font-bold">{totalExercises}</h3>
               </div>
-              <div className="bg-purple-100 p-3 rounded-full">
-                <Activity className="w-6 h-6 text-purple-600" />
+              <div className="bg-purple-100 p-2 sm:p-3 rounded-full">
+                <Activity className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-md">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-500">Documentos</p>
-                <h3 className="text-3xl font-bold">{documentsStats?.total || 0}</h3>
+                <p className="text-sm sm:text-base text-gray-500">Documentos</p>
+                <h3 className="text-2xl sm:text-3xl font-bold">{documentsStats?.total || 0}</h3>
               </div>
-              <div className="bg-orange-100 p-3 rounded-full">
-                <ClipboardList className="w-6 h-6 text-orange-600" />
+              <div className="bg-orange-100 p-2 sm:p-3 rounded-full">
+                <ClipboardList className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Ações Rápidas */}
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
-          <div className="grid grid-cols-4 gap-4">
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">Ações Rápidas</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <Button onClick={() => goTo("NEW_PATIENT")} variant="primary" size="full">
               Novo Paciente
             </Button>
@@ -182,29 +182,28 @@ function HomePage() {
         </div>
 
         {/* Grid de duas colunas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Coluna da esquerda */}
-            {/* Consultas de Hoje */}
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">Consultas de Hoje</h2>
-                <Button onClick={() => goTo("CALENDAR")} variant="outline" size="sm">
-                  Ver Calendário
-                </Button>
-              </div>
-              
-              <div className="">
-                {loading ? (
-                  <p>Carregando...</p>
-                ) : (
-                  <ConsultationAlerts events={events} />
-                )}
-              </div>
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+              <h2 className="text-lg sm:text-xl font-semibold">Consultas de Hoje</h2>
+              <Button onClick={() => goTo("CALENDAR")} variant="outline" size="sm">
+                Ver Calendário
+              </Button>
             </div>
+            
+            <div className="">
+              {loading ? (
+                <p>Carregando...</p>
+              ) : (
+                <ConsultationAlerts events={events} />
+              )}
+            </div>
+          </div>
 
           {/* Coluna da direita - Atividades Recentes */}
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Atividades Recentes</h2>
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
+            <h2 className="text-lg sm:text-xl font-semibold mb-4">Atividades Recentes</h2>
             <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-400px)] pr-2">
               {loading ? (
                 <p>Carregando...</p>

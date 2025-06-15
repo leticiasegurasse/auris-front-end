@@ -344,12 +344,12 @@ function PatientDetailsPage() {
       />
 
       {/* Menu de navegação */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <div className="flex">
+          <div className="flex flex-col sm:flex-row">
             <button
               onClick={() => setActiveTab("details")}
-              className={`flex-1 py-4 px-6 text-center transition-all duration-200 relative ${
+              className={`flex-1 py-3 sm:py-4 px-4 sm:px-6 text-center transition-all duration-200 relative ${
                 activeTab === "details"
                   ? "text-blue-600 font-medium"
                   : "text-gray-600 hover:text-blue-500"
@@ -359,7 +359,7 @@ function PatientDetailsPage() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                 </svg>
-                <span>Dados do Paciente</span>
+                <span className="text-sm sm:text-base">Dados do Paciente</span>
               </div>
               {activeTab === "details" && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"></div>
@@ -368,7 +368,7 @@ function PatientDetailsPage() {
 
             <button
               onClick={() => setActiveTab("exercises")}
-              className={`flex-1 py-4 px-6 text-center transition-all duration-200 relative ${
+              className={`flex-1 py-3 sm:py-4 px-4 sm:px-6 text-center transition-all duration-200 relative ${
                 activeTab === "exercises"
                   ? "text-blue-600 font-medium"
                   : "text-gray-600 hover:text-blue-500"
@@ -378,7 +378,7 @@ function PatientDetailsPage() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                 </svg>
-                <span>Exercícios</span>
+                <span className="text-sm sm:text-base">Exercícios</span>
               </div>
               {activeTab === "exercises" && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"></div>
@@ -387,7 +387,7 @@ function PatientDetailsPage() {
 
             <button
               onClick={() => setActiveTab("documents")}
-              className={`flex-1 py-4 px-6 text-center transition-all duration-200 relative ${
+              className={`flex-1 py-3 sm:py-4 px-4 sm:px-6 text-center transition-all duration-200 relative ${
                 activeTab === "documents"
                   ? "text-blue-600 font-medium"
                   : "text-gray-600 hover:text-blue-500"
@@ -397,7 +397,7 @@ function PatientDetailsPage() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
                 </svg>
-                <span>Documentos</span>
+                <span className="text-sm sm:text-base">Documentos</span>
               </div>
               {activeTab === "documents" && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"></div>
@@ -413,10 +413,10 @@ function PatientDetailsPage() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
         </div>
       ) : activeTab === "details" ? (
-        <div className="space-y-6 bg-white shadow-md p-8 rounded-xl">
-          <h2 className="text-2xl font-bold text-gray-700 mb-6">Editar Paciente</h2>
+        <div className="space-y-6 bg-white shadow-md p-4 sm:p-8 rounded-xl">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-700 mb-4 sm:mb-6">Editar Paciente</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <InputField 
               label="Nome" 
               name="name_user" 
@@ -481,27 +481,27 @@ function PatientDetailsPage() {
             </div>
           </div>
 
-          <div className="flex justify-end mt-8">
-            <Button onClick={handleSave} className="px-8">
+          <div className="flex justify-end mt-6 sm:mt-8">
+            <Button onClick={handleSave} className="w-full sm:w-auto px-8">
               Salvar Alterações
             </Button>
           </div>
         </div>
       ) : activeTab === "exercises" ? (
-        <div className="space-y-6 bg-white shadow-md p-8 rounded-xl">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-700">Exercícios do Paciente</h2>
-            <Button onClick={handleOpenModal} variant="primary">
+        <div className="space-y-6 bg-white shadow-md p-4 sm:p-8 rounded-xl">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-700">Exercícios do Paciente</h2>
+            <Button onClick={handleOpenModal} variant="primary" className="w-full sm:w-auto">
               + Atribuir Novo Exercício
             </Button>
           </div>
           
           {/* Abas dos exercícios */}
           <div className="mb-6">
-            <div className="bg-gray-50 rounded-xl p-1.5 inline-flex">
+            <div className="bg-gray-50 rounded-xl p-1.5 inline-flex flex-wrap sm:flex-nowrap gap-2">
               <button
                 onClick={() => setExerciseTab("pending")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   exerciseTab === "pending"
                     ? "bg-white text-blue-600 shadow-sm"
                     : "text-gray-600 hover:text-blue-500"
@@ -516,7 +516,7 @@ function PatientDetailsPage() {
               </button>
               <button
                 onClick={() => setExerciseTab("completed")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   exerciseTab === "completed"
                     ? "bg-white text-green-600 shadow-sm"
                     : "text-gray-600 hover:text-green-500"
@@ -531,7 +531,7 @@ function PatientDetailsPage() {
               </button>
               <button
                 onClick={() => setExerciseTab("waiting")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   exerciseTab === "waiting"
                     ? "bg-white text-yellow-600 shadow-sm"
                     : "text-gray-600 hover:text-yellow-500"
@@ -569,7 +569,7 @@ function PatientDetailsPage() {
                 .map((exercise) => (
                 <div key={exercise._id} className="bg-white rounded-lg border border-gray-200 hover:border-blue-200 transition-all duration-200">
                   <div className="p-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-3">
                           <h3 className="font-medium text-gray-900">{exercise.exerciseId?.title || "Exercício sem título"}</h3>
@@ -581,7 +581,7 @@ function PatientDetailsPage() {
                             {exercise.status}
                           </span>
                         </div>
-                        <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
+                        <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-gray-500">
                           {exercise.startDate && (
                             <div className="flex items-center gap-1">
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -606,13 +606,14 @@ function PatientDetailsPage() {
                             variant="danger" 
                             icon={Trash2} 
                             onClick={() => handleDeleteClick(exercise)}
-                            className="ml-4"
+                            className="w-full sm:w-auto"
                           />
                         )}
                         {exercise.status === "waiting" && (
                           <Button 
                             variant="primary" 
                             onClick={() => handleViewResponse(exercise)}
+                            className="w-full sm:w-auto"
                           >
                             Ver Resposta
                           </Button>
@@ -621,6 +622,7 @@ function PatientDetailsPage() {
                           <Button 
                             variant="primary" 
                             onClick={() => handleViewCompletedExercise(exercise)}
+                            className="w-full sm:w-auto"
                           >
                             Ver Detalhes
                           </Button>
@@ -634,20 +636,20 @@ function PatientDetailsPage() {
           )}
         </div>
       ) : (
-        <div className="space-y-6 bg-white shadow-md p-8 rounded-xl">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-700">Documentos do Paciente</h2>
-            <Button onClick={() => setIsDocumentModalOpen(true)} variant="primary">
+        <div className="space-y-6 bg-white shadow-md p-4 sm:p-8 rounded-xl">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-700">Documentos do Paciente</h2>
+            <Button onClick={() => setIsDocumentModalOpen(true)} variant="primary" className="w-full sm:w-auto">
               + Adicionar Novo Documento
             </Button>
           </div>
 
           {/* Abas dos documentos */}
           <div className="mb-6">
-            <div className="bg-gray-50 rounded-xl p-1.5 inline-flex">
+            <div className="bg-gray-50 rounded-xl p-1.5 inline-flex flex-wrap sm:flex-nowrap gap-2">
               <button
                 onClick={() => setDocumentTab("anamnese")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   documentTab === "anamnese"
                     ? "bg-white text-blue-600 shadow-sm"
                     : "text-gray-600 hover:text-blue-500"
@@ -662,7 +664,7 @@ function PatientDetailsPage() {
               </button>
               <button
                 onClick={() => setDocumentTab("evolucao")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   documentTab === "evolucao"
                     ? "bg-white text-blue-600 shadow-sm"
                     : "text-gray-600 hover:text-blue-500"
@@ -725,9 +727,9 @@ function PatientDetailsPage() {
       )}
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative">
-            <h2 className="text-2xl font-bold mb-4">Atribuir Novo Exercício</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-lg relative">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">Atribuir Novo Exercício</h2>
 
             {/* Selecionar Categoria */}
             <div className="mb-4">
@@ -786,34 +788,36 @@ function PatientDetailsPage() {
             </div>
 
             {/* Botões */}
-            <div className="flex justify-end gap-4">
-              <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
-              <Button onClick={handleSaveNewExercise}>Salvar</Button>
+            <div className="flex flex-col sm:flex-row justify-end gap-4">
+              <Button variant="outline" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">Cancelar</Button>
+              <Button onClick={handleSaveNewExercise} className="w-full sm:w-auto">Salvar</Button>
             </div>
           </div>
         </div>
       )}
 
       {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-2xl font-bold mb-4">Confirmar Exclusão</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">Confirmar Exclusão</h2>
             <p className="mb-4">
               Tem certeza que deseja excluir o exercício "{exerciseToDelete?.exerciseId?.title}"?
             </p>
-            <div className="flex justify-end gap-4">
+            <div className="flex flex-col sm:flex-row justify-end gap-4">
               <Button 
                 variant="outline" 
                 onClick={() => {
                   setIsDeleteModalOpen(false);
                   setExerciseToDelete(null);
                 }}
+                className="w-full sm:w-auto"
               >
                 Cancelar
               </Button>
               <Button 
                 variant="danger" 
                 onClick={() => handleDeleteExercise(exerciseToDelete._id)}
+                className="w-full sm:w-auto"
               >
                 Confirmar Exclusão
               </Button>
@@ -824,9 +828,9 @@ function PatientDetailsPage() {
 
       {/* Modal de Adicionar Documento */}
       {isDocumentModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative">
-            <h2 className="text-2xl font-bold mb-4">Adicionar Novo Documento</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-lg relative">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">Adicionar Novo Documento</h2>
 
             <div className="mb-4">
               <label className="block font-medium mb-1">Tipo de Documento</label>
@@ -860,9 +864,9 @@ function PatientDetailsPage() {
               />
             </div>
 
-            <div className="flex justify-end gap-4">
-              <Button variant="outline" onClick={() => setIsDocumentModalOpen(false)}>Cancelar</Button>
-              <Button onClick={handleSaveNewDocument}>Salvar</Button>
+            <div className="flex flex-col sm:flex-row justify-end gap-4">
+              <Button variant="outline" onClick={() => setIsDocumentModalOpen(false)} className="w-full sm:w-auto">Cancelar</Button>
+              <Button onClick={handleSaveNewDocument} className="w-full sm:w-auto">Salvar</Button>
             </div>
           </div>
         </div>
@@ -870,10 +874,10 @@ function PatientDetailsPage() {
 
       {/* Modal de Resposta do Exercício */}
       {isResponseModalOpen && exerciseResponse && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-6xl relative">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-4 sm:p-8 rounded-xl shadow-lg w-full max-w-6xl relative">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">Avaliação de Exercício</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Avaliação de Exercício</h2>
               <button
                 onClick={() => setIsResponseModalOpen(false)}
                 className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -884,12 +888,12 @@ function PatientDetailsPage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
               {/* Resposta do Paciente */}
-              <div className="bg-gray-50 rounded-xl p-6">
+              <div className="bg-gray-50 rounded-xl p-4 sm:p-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Resposta do Paciente</h3>
                 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div>
                     <h4 className="text-sm font-medium text-gray-600 mb-1">Exercício</h4>
                     <p className="text-gray-800 font-medium">{selectedExercise?.exerciseId?.title}</p>
@@ -924,10 +928,10 @@ function PatientDetailsPage() {
               </div>
 
               {/* Avaliação do Terapeuta */}
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Avaliação do Terapeuta</h3>
                 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Comentário
@@ -978,17 +982,17 @@ function PatientDetailsPage() {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-4 mt-8">
+                <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6 sm:mt-8">
                   <Button 
                     variant="outline" 
                     onClick={() => setIsResponseModalOpen(false)}
-                    className="px-6"
+                    className="w-full sm:w-auto px-6"
                   >
                     Cancelar
                   </Button>
                   <Button 
                     onClick={handleSaveEvaluation}
-                    className="px-6"
+                    className="w-full sm:w-auto px-6"
                   >
                     Salvar Avaliação
                   </Button>
@@ -1001,10 +1005,10 @@ function PatientDetailsPage() {
 
       {/* Modal de Exercício Completo */}
       {isCompletedModalOpen && completedExerciseData.exercise && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-6xl relative">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-4 sm:p-8 rounded-xl shadow-lg w-full max-w-6xl relative">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">Detalhes do Exercício</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Detalhes do Exercício</h2>
               <button
                 onClick={() => setIsCompletedModalOpen(false)}
                 className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -1015,12 +1019,12 @@ function PatientDetailsPage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
               {/* Resposta do Paciente */}
-              <div className="bg-gray-50 rounded-xl p-6">
+              <div className="bg-gray-50 rounded-xl p-4 sm:p-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Resposta do Paciente</h3>
                 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div>
                     <h4 className="text-sm font-medium text-gray-600 mb-1">Exercício</h4>
                     <p className="text-gray-800 font-medium">{completedExerciseData.exercise?.exerciseId?.title}</p>
@@ -1055,10 +1059,10 @@ function PatientDetailsPage() {
               </div>
 
               {/* Avaliação do Terapeuta */}
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-4 sm:p-6 border border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Avaliação do Terapeuta</h3>
                 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div>
                     <h4 className="text-sm font-medium text-gray-600 mb-1">Comentário</h4>
                     <p className="text-gray-800 bg-gray-50 rounded-lg p-3 border border-gray-200">

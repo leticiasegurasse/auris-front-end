@@ -124,6 +124,7 @@ function CalendarPage() {
       therapist: user?.id || ""
     });
     setIsModalOpen(true);
+    console.log("FormData:", selectedAppointment);
   };
 
   const handleInputChange = (e) => {
@@ -211,8 +212,8 @@ function CalendarPage() {
           />
         )}
 
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Calendário de Consultas</h1>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <h1 className="text-xl sm:text-2xl font-bold">Calendário de Consultas</h1>
           <Button
             icon={Plus}
             onClick={() => {
@@ -225,14 +226,15 @@ function CalendarPage() {
               });
               setIsModalOpen(true);
             }}
+            className="w-full sm:w-auto"
           >
             Nova Consulta
           </Button>
         </div>
 
-        <div className="flex flex-wrap gap-6">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
           <div className="flex-1">
-            <div className="bg-white rounded-lg shadow p-4">
+            <div className="bg-white rounded-lg shadow p-2 sm:p-4">
               <FullCalendar
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 initialView="dayGridMonth"
@@ -271,13 +273,24 @@ function CalendarPage() {
                 displayEventEnd={true}
                 eventDisplay="block"
                 timeZone="local"
+                views={{
+                  dayGridMonth: {
+                    titleFormat: { year: 'numeric', month: 'long' }
+                  },
+                  timeGridWeek: {
+                    titleFormat: { year: 'numeric', month: 'long', day: '2-digit' }
+                  },
+                  timeGridDay: {
+                    titleFormat: { year: 'numeric', month: 'long', day: '2-digit' }
+                  }
+                }}
               />
             </div>
           </div>
 
-          <div className="md:w-full lg:w-80">
-            <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
-              <Bell size={20} />
+          <div className="w-full lg:w-80">
+            <h2 className="mb-4 text-base sm:text-lg font-semibold flex items-center gap-2">
+              <Bell size={18} />
               Consultas de Hoje
             </h2>
             <ConsultationAlerts events={events} />
@@ -286,14 +299,14 @@ function CalendarPage() {
 
         {/* Modal de Agendamento */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-              <h2 className="text-2xl font-bold mb-4">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4">
                 {selectedAppointment ? "Editar Consulta" : "Agendar Consulta"}
               </h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block font-medium mb-1">Paciente</label>
+                  <label className="block text-sm sm:text-base font-medium mb-1">Paciente</label>
                   <div className="relative">
                     <div 
                       className="w-full p-2 border rounded cursor-pointer"
@@ -314,7 +327,7 @@ function CalendarPage() {
                             placeholder="Buscar paciente..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-2 border rounded text-sm sm:text-base"
                             onClick={(e) => e.stopPropagation()}
                           />
                         </div>
@@ -322,7 +335,7 @@ function CalendarPage() {
                           {filteredPatients.map(patient => (
                             <div
                               key={patient._id}
-                              className="p-2 hover:bg-gray-100 cursor-pointer"
+                              className="p-2 hover:bg-gray-100 cursor-pointer text-sm sm:text-base"
                               onClick={() => {
                                 setFormData(prev => ({ ...prev, patient: patient._id }));
                                 setIsSearchOpen(false);
@@ -337,32 +350,33 @@ function CalendarPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block font-medium mb-1">Data e Hora</label>
+                  <label className="block text-sm sm:text-base font-medium mb-1">Data e Hora</label>
                   <input
                     type="datetime-local"
                     name="consultationDateTime"
                     value={formData.consultationDateTime}
                     onChange={handleInputChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-sm sm:text-base"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-1">Observações</label>
+                  <label className="block text-sm sm:text-base font-medium mb-1">Observações</label>
                   <textarea
                     name="observations"
                     value={formData.observations}
                     onChange={handleInputChange}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-sm sm:text-base"
                     rows="3"
                   />
                 </div>
-                <div className="flex justify-end gap-4">
+                <div className="flex flex-col sm:flex-row justify-end gap-4">
                   {selectedAppointment && (
                     <Button
                       variant="danger"
                       icon={Trash2}
                       onClick={handleDelete}
+                      className="w-full sm:w-auto"
                     >
                       Excluir
                     </Button>
@@ -370,10 +384,14 @@ function CalendarPage() {
                   <Button
                     variant="outline"
                     onClick={() => setIsModalOpen(false)}
+                    className="w-full sm:w-auto"
                   >
                     Cancelar
                   </Button>
-                  <Button type="submit">
+                  <Button 
+                    type="submit"
+                    className="w-full sm:w-auto"
+                  >
                     {selectedAppointment ? "Salvar" : "Agendar"}
                   </Button>
                 </div>

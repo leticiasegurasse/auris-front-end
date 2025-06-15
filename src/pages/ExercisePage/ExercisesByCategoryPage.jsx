@@ -174,35 +174,33 @@ function ExercisesByCategoryPage() {
   return (
     <MainLayout>
       <div>
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6 sm:mb-8">
             <div className="flex-1">
               <PageHeader 
                 title={category.title}
                 description={category.description}
               />
-              <div className="flex items-center gap-4 mt-4">
-                <div className="flex gap-3">
-                  <button
-                    onClick={handleEditClick}
-                    className="flex items-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200"
-                  >
-                    <Edit2 size={18} />
-                    <span className="text-sm font-medium">Editar Categoria</span>
-                  </button>
-                  <button
-                    onClick={() => setIsDeleteModalOpen(true)}
-                    className="flex items-center gap-2 px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200"
-                  >
-                    <Trash2 size={18} />
-                    <span className="text-sm font-medium">Excluir Categoria</span>
-                  </button>
-                </div>
+              <div className="flex flex-wrap items-center gap-3 mt-4">
+                <button
+                  onClick={handleEditClick}
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200"
+                >
+                  <Edit2 size={18} />
+                  <span className="text-sm font-medium">Editar Categoria</span>
+                </button>
+                <button
+                  onClick={() => setIsDeleteModalOpen(true)}
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200"
+                >
+                  <Trash2 size={18} />
+                  <span className="text-sm font-medium">Excluir Categoria</span>
+                </button>
               </div>
             </div>
             <Button 
               onClick={handleAddExercise}
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
             >
               <Plus size={20} />
               Novo Exercício
@@ -213,7 +211,7 @@ function ExercisesByCategoryPage() {
             <AlertMessage 
               type={alert.type} 
               message={alert.message} 
-              className="mb-8" 
+              className="mb-6 sm:mb-8" 
               onClose={() => setAlert(null)} 
             />
           )}
@@ -222,17 +220,17 @@ function ExercisesByCategoryPage() {
             {exercises.slice((page - 1) * limit, page * limit).map((exercise) => (
               <div
                 key={exercise._id}
-                className="p-6 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-all duration-200 cursor-pointer"
+                className="p-4 sm:p-6 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-all duration-200 cursor-pointer"
                 onClick={() => handleViewExerciseDetails(exercise._id)}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div className="p-2 bg-blue-100 rounded-full">
                       <Play className="text-blue-600" size={20} />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-800">{exercise.title}</h3>
-                      <p className="text-gray-600 mt-1">{exercise.description}</p>
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-800">{exercise.title}</h3>
+                      <p className="text-sm sm:text-base text-gray-600 mt-1">{exercise.description}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-blue-600">
@@ -245,15 +243,16 @@ function ExercisesByCategoryPage() {
           </div>
 
           {exercises.length === 0 && (
-            <div className="text-center py-12">
-              <div className="bg-white rounded-xl p-8 max-w-md mx-auto shadow-lg flex flex-col items-center justify-center">
-                <div className="p-4 bg-blue-100 rounded-full w-16 h-16 mx-auto mb-4">
-                  <Play className="text-blue-600 mx-auto" size={32} />
+            <div className="text-center py-8 sm:py-12">
+              <div className="bg-white rounded-xl p-6 sm:p-8 max-w-md mx-auto shadow-lg flex flex-col items-center justify-center">
+                <div className="p-4 bg-blue-100 rounded-full w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4">
+                  <Play className="text-blue-600 mx-auto" size={24} />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">Nenhum exercício encontrado</h3>
-                <p className="text-gray-600 mb-4">Comece criando seu primeiro exercício nesta categoria</p>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">Nenhum exercício encontrado</h3>
+                <p className="text-sm sm:text-base text-gray-600 mb-4">Comece criando seu primeiro exercício nesta categoria</p>
                 <Button 
                   onClick={handleAddExercise}
+                  className="w-full sm:w-auto"
                 >
                   Criar Primeiro Exercício
                 </Button>
@@ -310,10 +309,10 @@ function ExercisesByCategoryPage() {
 
       {/* Modal de Edição */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 shadow-2xl w-full max-w-md transform transition-all duration-300">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">Editar Categoria</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-4 sm:p-8 shadow-2xl w-full max-w-md transform transition-all duration-300">
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Editar Categoria</h2>
               <button
                 onClick={() => setIsDeleteModalOpen(true)}
                 className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
@@ -321,7 +320,7 @@ function ExercisesByCategoryPage() {
                 <Trash2 size={20} />
               </button>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Título</label>
                 <input
@@ -329,7 +328,7 @@ function ExercisesByCategoryPage() {
                   name="title"
                   value={editForm.title}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                 />
               </div>
               <div>
@@ -338,19 +337,21 @@ function ExercisesByCategoryPage() {
                   name="description"
                   value={editForm.description}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
+                  className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
                   rows="3"
                 />
               </div>
-              <div className="flex justify-end gap-4">
+              <div className="flex flex-col sm:flex-row justify-end gap-4">
                 <Button 
                   onClick={handleCancelEdit}
                   variant="outline"
+                  className="w-full sm:w-auto"
                 >
                   Cancelar
                 </Button>
                 <Button 
                   onClick={handleSaveEdit}
+                  className="w-full sm:w-auto"
                 >
                   Salvar
                 </Button>
@@ -362,26 +363,26 @@ function ExercisesByCategoryPage() {
 
       {/* Modal de Confirmação de Exclusão */}
       {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 shadow-2xl w-full max-w-md transform transition-all duration-300">
-            <div className="p-4 bg-red-100 rounded-full w-16 h-16 mx-auto mb-4">
-              <Trash2 className="text-red-600 mx-auto" size={32} />
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-4 sm:p-8 shadow-2xl w-full max-w-md transform transition-all duration-300">
+            <div className="p-4 bg-red-100 rounded-full w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4">
+              <Trash2 className="text-red-600 mx-auto" size={24} />
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 text-center mb-4">Confirmar Exclusão</h2>
-            <p className="text-gray-600 text-center mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-4">Confirmar Exclusão</h2>
+            <p className="text-sm sm:text-base text-gray-600 text-center mb-6">
               Tem certeza que deseja excluir a categoria "{category?.title}"? 
               Esta ação não pode ser desfeita.
             </p>
-            <div className="flex justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button 
                 onClick={() => setIsDeleteModalOpen(false)}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-lg transition-all duration-300"
+                className="w-full sm:w-auto bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300"
               >
                 Cancelar
               </Button>
               <Button 
                 onClick={handleDeleteCategory}
-                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 Confirmar Exclusão
               </Button>

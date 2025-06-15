@@ -226,15 +226,16 @@ function EvolutionPage() {
           <AlertMessage type={alert.type} message={alert.message} className="mb-4" onClose={() => setAlert(null)} />
         )}
 
-        <div className="max-w-7xl mx-auto space-y-6">
+        <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6">
           {/* Header Section */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">Documentos</h1>
-              <p className="text-gray-600 mt-1">Gerencie e acompanhe os documentos dos pacientes</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Documentos</h1>
+              <p className="text-sm sm:text-base text-gray-600 mt-1">Gerencie e acompanhe os documentos dos pacientes</p>
             </div>
             <Button
               onClick={handleAddDocument}
+              className="w-full sm:w-auto"
             >
               <Plus size={20} />
               Adicionar Documento
@@ -242,55 +243,55 @@ function EvolutionPage() {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-600 text-sm">Total de Documentos</p>
-                  <p className="text-3xl font-bold text-indigo-600 mt-1">{stats.total}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-indigo-600 mt-1">{stats.total}</p>
                 </div>
-                <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
-                  <FileText className="text-indigo-600" size={24} />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+                  <FileText className="text-indigo-600" size={20} />
                 </div>
               </div>
             </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-600 text-sm">Total de Evoluções</p>
-                  <p className="text-3xl font-bold text-purple-600 mt-1">
+                  <p className="text-2xl sm:text-3xl font-bold text-purple-600 mt-1">
                     {stats.byType.evolucao}
                   </p>
                 </div>
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                  <Calendar className="text-purple-600" size={24} />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                  <Calendar className="text-purple-600" size={20} />
                 </div>
               </div>
             </div>
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-600 text-sm">Total de Anamneses</p>
-                  <p className="text-3xl font-bold text-pink-600 mt-1">
+                  <p className="text-2xl sm:text-3xl font-bold text-pink-600 mt-1">
                     {stats.byType.anamnese}
                   </p>
                 </div>
-                <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
-                  <Clock className="text-pink-600" size={24} />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-pink-100 rounded-xl flex items-center justify-center">
+                  <Clock className="text-pink-600" size={20} />
                 </div>
               </div>
             </div>
           </div>
 
           {/* Search Section */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
-            <div className="flex flex-col md:flex-row gap-4">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20">
+            <div className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
                   type="text"
                   placeholder="Buscar por nome do paciente..."
-                  className="w-full pl-12 pr-4 py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-2 sm:py-3 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyPress={(e) => {
@@ -302,7 +303,7 @@ function EvolutionPage() {
               </div>
               <Button
                 onClick={handleSearch}
-                className="whitespace-nowrap"
+                className="w-full sm:w-auto whitespace-nowrap"
               >
                 <Search size={20} className="mr-2" />
                 Buscar
@@ -313,14 +314,14 @@ function EvolutionPage() {
           {/* Documents List */}
           <div className="space-y-4">
             {loading ? (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Carregando documentos...</p>
+              <div className="text-center py-8 sm:py-12">
+                <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-indigo-500 mx-auto"></div>
+                <p className="mt-4 text-sm sm:text-base text-gray-600">Carregando documentos...</p>
               </div>
             ) : documents.length === 0 ? (
-              <div className="text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
-                <FileText className="mx-auto text-gray-400" size={48} />
-                <p className="mt-4 text-gray-600">
+              <div className="text-center py-8 sm:py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20">
+                <FileText className="mx-auto text-gray-400" size={40} />
+                <p className="mt-4 text-sm sm:text-base text-gray-600">
                   {searchTerm 
                     ? `Nenhum documento encontrado para "${searchTerm}"`
                     : 'Nenhum documento encontrado'}
@@ -332,13 +333,13 @@ function EvolutionPage() {
                   {documents.map((doc) => (
                     <div
                       key={doc._id}
-                      className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20 hover:shadow-xl transition-all duration-300 cursor-pointer"
+                      className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20 hover:shadow-xl transition-all duration-300 cursor-pointer"
                       onClick={() => handleDocumentClick(doc)}
                     >
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
-                            <FileText className="text-indigo-600" size={24} />
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
+                            <FileText className="text-indigo-600" size={20} />
                           </div>
                           <div>
                             <h3 className="font-medium text-gray-800 group-hover:text-indigo-600 transition-colors">
@@ -350,7 +351,7 @@ function EvolutionPage() {
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center justify-between sm:justify-end gap-4">
                           <div className="text-sm text-gray-500 flex items-center gap-2">
                             <Calendar size={16} />
                             {new Date(doc.createdAt).toLocaleDateString('pt-BR')}
@@ -411,10 +412,10 @@ function EvolutionPage() {
 
         {/* Modal de Adicionar Documento */}
         {isAddDocumentModalOpen && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-            <div className="bg-white rounded-2xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Adicionar Novo Documento</h2>
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Adicionar Novo Documento</h2>
                 <button
                   onClick={() => setIsAddDocumentModalOpen(false)}
                   className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -423,8 +424,8 @@ function EvolutionPage() {
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Paciente
@@ -435,7 +436,7 @@ function EvolutionPage() {
                         const patient = patients.find(p => p._id === e.target.value);
                         setSelectedPatient(patient);
                       }}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                      className="w-full border border-gray-200 rounded-xl px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                       required
                     >
                       <option value="">Selecione o paciente</option>
@@ -454,7 +455,7 @@ function EvolutionPage() {
                     <select
                       value={documentType}
                       onChange={(e) => setDocumentType(e.target.value)}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                      className="w-full border border-gray-200 rounded-xl px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                       required
                     >
                       <option value="">Selecione o tipo</option>
@@ -471,7 +472,7 @@ function EvolutionPage() {
                   <textarea
                     value={report}
                     onChange={(e) => setReport(e.target.value)}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-32"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-32"
                     required
                   />
                 </div>
@@ -483,19 +484,21 @@ function EvolutionPage() {
                   <textarea
                     value={observation}
                     onChange={(e) => setObservation(e.target.value)}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-20"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-20"
                   />
                 </div>
 
-                <div className="flex justify-end gap-4">
+                <div className="flex flex-col sm:flex-row justify-end gap-4">
                   <Button
                     onClick={() => setIsAddDocumentModalOpen(false)}
                     variant="outline"
+                    className="w-full sm:w-auto"
                   >
                     Cancelar
                   </Button>
                   <Button
                     type="submit"
+                    className="w-full sm:w-auto"
                   >
                     Salvar
                   </Button>
@@ -507,10 +510,10 @@ function EvolutionPage() {
 
         {/* Modal de Visualização */}
         {isModalOpen && selectedDocument && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-            <div className="bg-white rounded-2xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
                   {selectedDocument.type === 'anamnese' ? 'Anamnese' : selectedDocument.type === 'evolucao' ? 'Evolução' : selectedDocument.type}
                 </h2>
                 <div className="flex items-center gap-2">
@@ -531,8 +534,8 @@ function EvolutionPage() {
                 </div>
               </div>
               
-              <div className="space-y-6">
-                <div className='flex justify-between items-center bg-gray-50 p-4 rounded-xl'>
+              <div className="space-y-4 sm:space-y-6">
+                <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-50 p-4 rounded-xl'>
                   <div className="flex items-center gap-2">
                     <User size={20} className="text-gray-600" />
                     <p className="text-gray-800">{selectedDocument.patientId?.userId?.name_user || 'Paciente não encontrado'}</p>
@@ -545,42 +548,44 @@ function EvolutionPage() {
                   </div>
                 </div>
 
-                <div className="bg-white border border-gray-200 rounded-xl p-6">
-                  <h3 className="font-medium text-lg text-gray-800 mb-4">Relatório:</h3>
+                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6">
+                  <h3 className="font-medium text-base sm:text-lg text-gray-800 mb-4">Relatório:</h3>
                   {isEditing ? (
                     <textarea
                       value={editedReport}
                       onChange={(e) => setEditedReport(e.target.value)}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-32"
+                      className="w-full border border-gray-200 rounded-xl px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-32"
                     />
                   ) : (
-                    <p className="text-gray-600 whitespace-pre-wrap leading-relaxed">{selectedDocument.report}</p>
+                    <p className="text-sm sm:text-base text-gray-600 whitespace-pre-wrap leading-relaxed">{selectedDocument.report}</p>
                   )}
                 </div>
 
-                <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
-                  <h3 className="font-medium text-lg text-gray-800 mb-4">Observação:</h3>
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 sm:p-6">
+                  <h3 className="font-medium text-base sm:text-lg text-gray-800 mb-4">Observação:</h3>
                   {isEditing ? (
                     <textarea
                       value={editedObservation}
                       onChange={(e) => setEditedObservation(e.target.value)}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-20"
+                      className="w-full border border-gray-200 rounded-xl px-4 py-2 sm:py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 h-20"
                     />
                   ) : (
-                    <p className="text-gray-600 whitespace-pre-wrap leading-relaxed">{selectedDocument.observation || 'Sem observações'}</p>
+                    <p className="text-sm sm:text-base text-gray-600 whitespace-pre-wrap leading-relaxed">{selectedDocument.observation || 'Sem observações'}</p>
                   )}
                 </div>
 
                 {isEditing && (
-                  <div className="flex justify-end gap-4 mt-6">
+                  <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6">
                     <Button
                       onClick={handleCancelEdit}
                       variant="outline"
+                      className="w-full sm:w-auto"
                     >
                       Cancelar
                     </Button>
                     <Button
                       onClick={handleUpdateDocument}
+                      className="w-full sm:w-auto"
                     >
                       Salvar
                     </Button>
