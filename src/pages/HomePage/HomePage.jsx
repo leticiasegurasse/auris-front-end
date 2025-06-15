@@ -7,6 +7,7 @@ import { getAllPatients } from "../../api/patients/patient";
 import { getAppointments, getAppointmentsFuture } from "../../api/calendar/calendar";
 import { getRecentLogs } from "../../api/logs/logs";
 import { getDocumentsStats } from "../../api/patients/patientDocuments";
+import { getCategoriesExerciseStats } from "../../api/categories/categories";
 import { Users, Calendar, ClipboardList, Activity, Clock } from "lucide-react";
 import ConsultationAlerts from "../../components/AlertsComponent/ConsultationAlerts";
 import AlertMessage from "../../components/AlertComponent/AlertMessage";
@@ -16,6 +17,7 @@ function HomePage() {
   const { goTo } = useCustomNavigate();
   const [patientsCount, setPatientsCount] = useState(0);
   const [totalAppointments, setTotalAppointments] = useState(0);
+  const [totalExercises, setTotalExercises] = useState(0);
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [alert, setAlert] = useState(null);
@@ -31,9 +33,10 @@ function HomePage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const [patientsResponse, statsResponse] = await Promise.all([
+        const [patientsResponse, statsResponse, exercisesStats] = await Promise.all([
           getAllPatients(),
-          getDocumentsStats()
+          getDocumentsStats(),
+          getCategoriesExerciseStats()
         ]);
 
         loadAppointments();
@@ -41,6 +44,7 @@ function HomePage() {
         
         setPatientsCount(patientsResponse?.patients?.length || 0);
         setDocumentsStats(statsResponse || { total: 0, byType: { anamnese: 0, evolucao: 0 } });
+        setTotalExercises(exercisesStats.totalExercises || 0);
         
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
@@ -137,7 +141,7 @@ function HomePage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500">Exercícios Ativos</p>
-                <h3 className="text-3xl font-bold">0</h3>
+                <h3 className="text-3xl font-bold">{totalExercises}</h3>
               </div>
               <div className="bg-purple-100 p-3 rounded-full">
                 <Activity className="w-6 h-6 text-purple-600" />

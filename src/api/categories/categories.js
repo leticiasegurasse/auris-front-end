@@ -24,3 +24,15 @@ export async function deleteCategoryById(id) {
   const response = await api.delete(`/categories/${id}`);
   return response.data;
 }
+
+export async function getCategoriesExerciseStats() {
+  const response = await api.get("/categories/stats/exercises");
+  const categories = response.data;
+  
+  const totalExercises = categories.reduce((sum, category) => sum + category.exerciseCount, 0);
+  
+  return {
+    categories,
+    totalExercises
+  };
+}

@@ -100,7 +100,7 @@ function HelpPage() {
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">Tutoriais em Vídeo</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {videoTutorials.map((video, index) => (
-              <div key={index} className="bg-gray-50 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <div key={index} className="flex flex-col justify-between bg-gray-50 rounded-lg p-6 hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="p-3 bg-blue-100 rounded-full">
                     <Video className="text-blue-600" size={24} />

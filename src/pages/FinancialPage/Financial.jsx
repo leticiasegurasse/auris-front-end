@@ -144,7 +144,7 @@ export default function Financial() {
                     </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-4">
                             <div className="p-3 bg-blue-50 rounded-lg">
@@ -160,22 +160,7 @@ export default function Financial() {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow">
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 bg-green-50 rounded-lg">
-                                <DollarSign className="w-6 h-6 text-green-600" />
-                            </div>
-                            <div>
-                                <h2 className="text-sm font-medium text-gray-600">Valor Total</h2>
-                                <p className="text-2xl font-bold text-gray-800 mt-1">
-                                    {new Intl.NumberFormat('pt-BR', {
-                                        style: 'currency',
-                                        currency: 'BRL'
-                                    }).format(totalAmount)}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                   
 
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-4">
